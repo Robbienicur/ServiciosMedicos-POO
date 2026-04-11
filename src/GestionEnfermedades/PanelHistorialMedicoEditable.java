@@ -1,11 +1,14 @@
 package GestionEnfermedades;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import BaseDeDatos.ConexionSQLite;
+import Utilidades.ColoresUDLAP;
+import Utilidades.ui.BotonUDLAP;
 
 public class PanelHistorialMedicoEditable extends JPanel {
     private JTextField campoID;
@@ -14,39 +17,51 @@ public class PanelHistorialMedicoEditable extends JPanel {
 
     public PanelHistorialMedicoEditable() {
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
+
+        // Título
+        JLabel titulo = new JLabel("Historial Médico por Paciente", SwingConstants.LEFT);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        titulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(16, 24, 16, 24)));
 
         // Parte superior con campo para ID
-        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelTop.setBackground(Color.WHITE);
-        JLabel label = new JLabel("ID del Paciente:");
-        campoID = new JTextField(10);
-        JButton botonBuscar = new JButton("Consultar");
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 8));
+        panelTop.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        // Color institucional NARANJA UDLAP
-        botonBuscar.setBackground(new Color(255, 102, 0));
-        botonBuscar.setForeground(Color.WHITE);
-        botonBuscar.setFocusPainted(false);
-        botonBuscar.setBorderPainted(false);
-        botonBuscar.setOpaque(true);
+        JLabel label = new JLabel("ID del Paciente:");
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        label.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+
+        campoID = new JTextField(10);
+        campoID.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        JButton botonBuscar = BotonUDLAP.secundario("Consultar");
 
         panelTop.add(label);
         panelTop.add(campoID);
         panelTop.add(botonBuscar);
 
-        add(panelTop, BorderLayout.NORTH);
+        JPanel encabezado = new JPanel(new BorderLayout());
+        encabezado.setOpaque(false);
+        encabezado.add(titulo, BorderLayout.NORTH);
+        encabezado.add(panelTop, BorderLayout.CENTER);
+        add(encabezado, BorderLayout.NORTH);
 
         // Panel donde irán los resultados
         JPanel panelCentral = new JPanel();
         panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
-        panelCentral.setBackground(Color.WHITE);
+        panelCentral.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(8, 24, 16, 24));
 
         panelDatos = new JPanel();
-        panelDatos.setBackground(Color.WHITE);
+        panelDatos.setBackground(ColoresUDLAP.FONDO_CARD);
         panelDatos.setLayout(new BoxLayout(panelDatos, BoxLayout.Y_AXIS));
 
         panelHistorial = new JPanel();
-        panelHistorial.setBackground(Color.WHITE);
+        panelHistorial.setBackground(ColoresUDLAP.FONDO_GENERAL);
         panelHistorial.setLayout(new BoxLayout(panelHistorial, BoxLayout.Y_AXIS));
 
         panelCentral.add(panelDatos);
@@ -55,6 +70,7 @@ public class PanelHistorialMedicoEditable extends JPanel {
 
         JScrollPane scroll = new JScrollPane(panelCentral);
         scroll.setBorder(null);
+        scroll.getViewport().setBackground(ColoresUDLAP.FONDO_GENERAL);
         add(scroll, BorderLayout.CENTER);
 
         // Acción del botón
@@ -83,10 +99,10 @@ public class PanelHistorialMedicoEditable extends JPanel {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                panelDatos.add(new JLabel("ID: " + id));
-                panelDatos.add(new JLabel("Nombre: " + rs.getString("Nombre") + " " + rs.getString("ApellidoPaterno")
+                panelDatos.add(crearLabelDato("ID:", String.valueOf(id)));
+                panelDatos.add(crearLabelDato("Nombre:", rs.getString("Nombre") + " " + rs.getString("ApellidoPaterno")
                         + " " + rs.getString("ApellidoMaterno")));
-                panelDatos.add(new JLabel("Correo: " + rs.getString("Correo")));
+                panelDatos.add(crearLabelDato("Correo:", rs.getString("Correo")));
             } else {
                 mostrarMensaje("No se encontró un alumno con ID: " + id);
                 revalidate();
@@ -101,15 +117,14 @@ public class PanelHistorialMedicoEditable extends JPanel {
             ResultSet rsRegistro = psRegistro.executeQuery();
 
             if (rsRegistro.next()) {
-                panelDatos.add(new JLabel("Edad: " + rsRegistro.getInt("Edad")));
-                panelDatos.add(new JLabel("Altura: " + rsRegistro.getDouble("Altura") + " cm"));
-                panelDatos.add(new JLabel("Peso: " + rsRegistro.getDouble("Peso") + " kg"));
-                panelDatos.add(
-                        new JLabel("Enfermedades Preexistentes: " + rsRegistro.getString("EnfermedadesPreexistentes")));
-                panelDatos.add(new JLabel("Medicación: " + rsRegistro.getString("Medicacion")));
-                panelDatos.add(new JLabel("Alergias: " + rsRegistro.getString("Alergias")));
+                panelDatos.add(crearLabelDato("Edad:", String.valueOf(rsRegistro.getInt("Edad"))));
+                panelDatos.add(crearLabelDato("Altura:", rsRegistro.getDouble("Altura") + " cm"));
+                panelDatos.add(crearLabelDato("Peso:", rsRegistro.getDouble("Peso") + " kg"));
+                panelDatos.add(crearLabelDato("Enfermedades Preexistentes:", rsRegistro.getString("EnfermedadesPreexistentes")));
+                panelDatos.add(crearLabelDato("Medicación:", rsRegistro.getString("Medicacion")));
+                panelDatos.add(crearLabelDato("Alergias:", rsRegistro.getString("Alergias")));
             } else {
-                panelDatos.add(new JLabel("No hay datos clínicos registrados para este paciente."));
+                panelDatos.add(crearLabelSimple("No hay datos clínicos registrados para este paciente."));
             }
 
             // Consultar historial
@@ -123,19 +138,24 @@ public class PanelHistorialMedicoEditable extends JPanel {
                 tieneConsultas = true;
                 JTextArea area = new JTextArea();
                 area.setEditable(false);
+                area.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                area.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+                area.setBackground(ColoresUDLAP.FONDO_CARD);
                 area.setText(
                         "Fecha: " + rs2.getString("FechaConsulta") +
                                 "\nDiagnóstico: " + rs2.getString("Diagnostico") +
                                 "\nSíntomas: " + rs2.getString("Sintomas") +
                                 "\nMedicamentos: " + rs2.getString("Medicamentos") +
                                 "\nReceta: " + rs2.getString("Receta"));
-                area.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                area.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)));
                 panelHistorial.add(area);
                 panelHistorial.add(Box.createVerticalStrut(10));
             }
 
             if (!tieneConsultas) {
-                panelHistorial.add(new JLabel("Este paciente no tiene historial médico registrado."));
+                panelHistorial.add(crearLabelSimple("Este paciente no tiene historial médico registrado."));
             }
 
         } catch (SQLException ex) {
@@ -144,6 +164,22 @@ public class PanelHistorialMedicoEditable extends JPanel {
 
         revalidate();
         repaint();
+    }
+
+    private JLabel crearLabelDato(String etiqueta, String valor) {
+        JLabel lbl = new JLabel(etiqueta + "  " + (valor != null ? valor : "-"));
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lbl.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        lbl.setBorder(BorderFactory.createEmptyBorder(3, 8, 3, 8));
+        return lbl;
+    }
+
+    private JLabel crearLabelSimple(String texto) {
+        JLabel lbl = new JLabel(texto);
+        lbl.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+        lbl.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        lbl.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        return lbl;
     }
 
     private void mostrarMensaje(String msg) {

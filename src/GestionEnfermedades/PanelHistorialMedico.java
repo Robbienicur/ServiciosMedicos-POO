@@ -1,6 +1,7 @@
 package GestionEnfermedades;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,19 +15,22 @@ public class PanelHistorialMedico extends JPanel implements PanelProvider {
     public PanelHistorialMedico(int idPaciente) {
         this.idPaciente = idPaciente;
         setLayout(new BorderLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         // Título
         JLabel titulo = new JLabel("Expediente Médico del Paciente", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        titulo.setForeground(ColoresUDLAP.VERDE_SOLIDO);
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        titulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(20, 0, 20, 0)));
         add(titulo, BorderLayout.NORTH);
 
         // Contenedor de todo
         JPanel contenedorPrincipal = new JPanel();
         contenedorPrincipal.setLayout(new BoxLayout(contenedorPrincipal, BoxLayout.Y_AXIS));
-        contenedorPrincipal.setBackground(Color.WHITE);
+        contenedorPrincipal.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        contenedorPrincipal.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
 
         // Información del paciente
         JPanel panelInfo = obtenerDatosGenerales();
@@ -44,6 +48,7 @@ public class PanelHistorialMedico extends JPanel implements PanelProvider {
 
         JScrollPane scroll = new JScrollPane(contenedorPrincipal);
         scroll.setBorder(BorderFactory.createEmptyBorder());
+        scroll.getViewport().setBackground(ColoresUDLAP.FONDO_GENERAL);
         add(scroll, BorderLayout.CENTER);
     }
 
@@ -72,25 +77,30 @@ public class PanelHistorialMedico extends JPanel implements PanelProvider {
                 String meds = rs.getString("Medicacion");
                 String alerg = rs.getString("Alergias");
 
-                JTextArea area = new JTextArea();
-                area.setEditable(false);
-                area.setBackground(ColoresUDLAP.BLANCO);
-                area.setFont(new Font("Arial", Font.PLAIN, 14));
-                area.setText(String.format("""
-                        Nombre completo: %s
-                        Edad: %d años
-                        Altura: %.2f m    Peso: %.2f kg
+                JPanel panel = new JPanel(new GridLayout(0, 2, 8, 6));
+                panel.setBackground(ColoresUDLAP.FONDO_CARD);
+                panel.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
+                        BorderFactory.createEmptyBorder(12, 16, 12, 16)));
 
-                        Enfermedades preexistentes: %s
-                        Medicación actual: %s
-                        Alergias: %s
-                        """, nombre, edad, altura, peso, enf, meds, alerg));
+                agregarFilaDatos(panel, "Nombre completo:", nombre);
+                agregarFilaDatos(panel, "Edad:", edad + " años");
+                agregarFilaDatos(panel, "Altura:", String.format("%.2f m", altura));
+                agregarFilaDatos(panel, "Peso:", String.format("%.2f kg", peso));
+                agregarFilaDatos(panel, "Enfermedades preexistentes:", enf);
+                agregarFilaDatos(panel, "Medicación actual:", meds);
+                agregarFilaDatos(panel, "Alergias:", alerg);
 
-                JPanel panel = new JPanel(new BorderLayout());
-                panel.setBackground(Color.WHITE);
-                panel.setBorder(BorderFactory.createTitledBorder("Datos Generales"));
-                panel.add(area, BorderLayout.CENTER);
-                return panel;
+                JPanel contenedor = new JPanel(new BorderLayout());
+                contenedor.setOpaque(false);
+
+                JLabel subtitulo = new JLabel("Datos Generales");
+                subtitulo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                subtitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+                subtitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
+                contenedor.add(subtitulo, BorderLayout.NORTH);
+                contenedor.add(panel, BorderLayout.CENTER);
+                return contenedor;
             }
 
         } catch (SQLException e) {
@@ -100,6 +110,19 @@ public class PanelHistorialMedico extends JPanel implements PanelProvider {
         }
 
         return null;
+    }
+
+    private void agregarFilaDatos(JPanel panel, String etiqueta, String valor) {
+        JLabel lblEtiqueta = new JLabel(etiqueta);
+        lblEtiqueta.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblEtiqueta.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+
+        JLabel lblValor = new JLabel(valor != null ? valor : "-");
+        lblValor.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblValor.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+
+        panel.add(lblEtiqueta);
+        panel.add(lblValor);
     }
 
     private ArrayList<HistorialMedicoItem> obtenerHistorialConsultas() {
