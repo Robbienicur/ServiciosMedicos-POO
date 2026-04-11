@@ -41,6 +41,10 @@
 
 <!-- PASTE VIDEO URL HERE -->
 
+
+https://github.com/user-attachments/assets/8bfa4f22-b678-40a7-93c1-9f0bec95412b
+
+
 > Full demo video available at [`assets/demo.mp4`](assets/demo.mp4)
 
 ---
