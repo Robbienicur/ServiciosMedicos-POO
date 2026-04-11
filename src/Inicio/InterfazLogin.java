@@ -4,129 +4,121 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import BaseDeDatos.ConexionSQLite; // Ajusta según tu paquete
+import BaseDeDatos.ConexionSQLite;
+import Utilidades.ColoresUDLAP;
+import Utilidades.ui.TemaUDLAP;
+import Utilidades.ui.BotonUDLAP;
+import Utilidades.ui.CampoTextoUDLAP;
+import Utilidades.ui.CardPanel;
 
 public class InterfazLogin extends JFrame {
-    private final JTextField txtID = new JTextField(15);
-    private final JPasswordField txtPass = new JPasswordField(15);
+
+    private JPanel panelID;
+    private JPanel panelPassword;
 
     public InterfazLogin() {
-        super("Servicios Médicos UDLAP - Login");
-        setUndecorated(true);
-        setSize(600, 400);
+        super("Servicios Médicos UDLAP");
+        setSize(500, 450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setResizable(false);
 
-        // Barra superior naranja
-        JPanel bar = new JPanel(new BorderLayout());
-        bar.setBackground(new Color(255, 102, 0));
-        bar.setPreferredSize(new Dimension(0, 30));
-        bar.add(createControlPanel(), BorderLayout.EAST);
-        enableDrag(bar);
-        add(bar, BorderLayout.NORTH);
+        // Fondo general
+        JPanel fondo = new JPanel(new GridBagLayout());
+        fondo.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        setContentPane(fondo);
 
-        // Panel central blanco y centrado
-        JPanel main = new JPanel();
-        main.setBackground(Color.WHITE);
-        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-        main.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        add(main, BorderLayout.CENTER);
+        // Card central
+        CardPanel card = new CardPanel(false);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
-        main.add(Box.createVerticalGlue());
+        // Logo UDLAP
+        JLabel lblLogo = new JLabel();
+        lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        try {
+            java.net.URL logoUrl = getClass().getResource("/icons/udlap_logo.png");
+            if (logoUrl != null) {
+                ImageIcon iconoOriginal = new ImageIcon(logoUrl);
+                Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                lblLogo.setIcon(new ImageIcon(imgEscalada));
+            }
+        } catch (Exception e) {
+            // Si no se encuentra el logo, se omite
+        }
+        card.add(lblLogo);
+        card.add(Box.createVerticalStrut(12));
 
-        // Título
-        JLabel lblTitulo = new JLabel(
-                "<html>"
-                        + "<span style='font-size:24pt; font-weight:bold; color:#006400;'>Servicios Médicos</span> "
-                        + "<span style='font-size:24pt; font-weight:bold; color:#FF6600;'>UDLAP</span>"
-                        + "</html>",
-                SwingConstants.CENTER);
+        // Titulo
+        JLabel lblTitulo = new JLabel("Servicios Médicos");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTitulo.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        main.add(lblTitulo);
-        main.add(Box.createVerticalStrut(20));
+        card.add(lblTitulo);
+        card.add(Box.createVerticalStrut(4));
 
-        // Subtítulo
-        JLabel lblLogin = new JLabel("Log In", SwingConstants.CENTER);
-        lblLogin.setFont(lblLogin.getFont().deriveFont(Font.PLAIN, 18f));
-        lblLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
-        main.add(lblLogin);
-        main.add(Box.createVerticalStrut(20));
+        // Subtitulo
+        JLabel lblSubtitulo = new JLabel("Iniciar Sesión");
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblSubtitulo.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        lblSubtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        card.add(lblSubtitulo);
+        card.add(Box.createVerticalStrut(15));
 
-        // Formulario
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
+        // Campo ID
+        panelID = CampoTextoUDLAP.crear("ID");
+        panelID.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelID.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        card.add(panelID);
+        card.add(Box.createVerticalStrut(10));
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        form.add(new JLabel("ID:"), gbc);
-        gbc.gridx = 1;
-        form.add(txtID, gbc);
+        // Campo Contraseña
+        panelPassword = CampoTextoUDLAP.crearPassword("Contraseña");
+        panelPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        card.add(panelPassword);
+        card.add(Box.createVerticalStrut(15));
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        form.add(new JLabel("Contraseña:"), gbc);
-        gbc.gridx = 1;
-        form.add(txtPass, gbc);
-
-        main.add(form);
-        main.add(Box.createVerticalStrut(20));
-
-        // Botones
-        JPanel botones = new JPanel();
-        botones.setBackground(Color.WHITE);
-        botones.setLayout(new BoxLayout(botones, BoxLayout.Y_AXIS));
-
-        JButton btnIniciar = new JButton("Iniciar Sesión");
-        btnIniciar.setFont(btnIniciar.getFont().deriveFont(Font.BOLD, 14f));
-        btnIniciar.setBackground(new Color(255, 102, 0));
-        btnIniciar.setForeground(Color.WHITE);
-        btnIniciar.setFocusPainted(false);
+        // Boton Iniciar Sesion
+        BotonUDLAP btnIniciar = BotonUDLAP.primario("Iniciar Sesión");
         btnIniciar.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnIniciar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        botones.add(btnIniciar);
+        card.add(btnIniciar);
+        card.add(Box.createVerticalStrut(12));
 
         // ENTER dispara btnIniciar
         getRootPane().setDefaultButton(btnIniciar);
 
-        botones.add(Box.createVerticalStrut(10));
+        // Recuperar contrasena
+        JLabel lblRecuperar = new JLabel("Recuperar contraseña");
+        lblRecuperar.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblRecuperar.setForeground(ColoresUDLAP.NARANJA_ACENTO);
+        lblRecuperar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblRecuperar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        card.add(lblRecuperar);
+        card.add(Box.createVerticalStrut(8));
 
-        JButton btnRecuperar = new JButton("Recuperar contraseña");
-        btnRecuperar.setFont(btnRecuperar.getFont().deriveFont(Font.BOLD, 14f));
-        btnRecuperar.setBackground(new Color(0, 100, 0));
-        btnRecuperar.setForeground(Color.WHITE);
-        btnRecuperar.setFocusPainted(false);
-        btnRecuperar.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnRecuperar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        botones.add(btnRecuperar);
+        // Entrar como invitado
+        JLabel lblInvitado = new JLabel("Entrar como invitado");
+        lblInvitado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblInvitado.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        lblInvitado.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblInvitado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        card.add(lblInvitado);
 
-        main.add(botones);
-        main.add(Box.createVerticalGlue());
+        // Agregar card al fondo centrado
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(20, 20, 20, 20);
+        fondo.add(card, gbc);
 
-        /*
-         * Footer con SOS
-         * String sosPath =
-         * "C:\\Users\\cosa2\\OneDrive - Fundacion Universidad de las Americas Puebla\\"
-         * +
-         * "4° Semestre\\Programación Orientada a Objetos\\ServiciosMedicos-POO\\SOS.png"
-         * ;
-         * ImageIcon sosOrig = new ImageIcon(sosPath);
-         * Image sosImg = sosOrig.getImage()
-         * .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-         * JLabel lblSOS = new JLabel(new ImageIcon(sosImg));
-         * 
-         * JPanel footer = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-         * footer.setBackground(Color.WHITE);
-         * footer.setPreferredSize(new Dimension(0, 40));
-         * footer.add(lblSOS);
-         * add(footer, BorderLayout.SOUTH);
-         */
+        // ===== LOGICA DE AUTENTICACION =====
 
-        // Lógica de login
         btnIniciar.addActionListener(e -> {
+            JTextField txtID = CampoTextoUDLAP.getTextField(panelID);
+            JPasswordField txtPass = CampoTextoUDLAP.getPasswordField(panelPassword);
+
             String idText = txtID.getText().trim();
             String password = new String(txtPass.getPassword());
             if (idText.isEmpty() || password.isEmpty()) {
@@ -146,21 +138,21 @@ public class InterfazLogin extends JFrame {
             }
 
             try (Connection con = ConexionSQLite.conectar()) {
-                // Médicos
-            String sqlMed = "SELECT Nombre, ApellidoPaterno FROM InformacionMedico WHERE ID = ? AND Contraseña = ?";
-            try (PreparedStatement ps = con.prepareStatement(sqlMed)) {
-                ps.setInt(1, id);
-                ps.setString(2, password);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        String nombreCompleto = rs.getString("Nombre") + " " + rs.getString("ApellidoPaterno");
-                        SesionUsuario.iniciarSesionMedico(nombreCompleto); // ← AQUÍ se guarda el nombre del médico
-                        new InterfazMedica(true, id).setVisible(true);
-                        dispose();
-                        return;
+                // Medicos
+                String sqlMed = "SELECT Nombre, ApellidoPaterno FROM InformacionMedico WHERE ID = ? AND Contraseña = ?";
+                try (PreparedStatement ps = con.prepareStatement(sqlMed)) {
+                    ps.setInt(1, id);
+                    ps.setString(2, password);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            String nombreCompleto = rs.getString("Nombre") + " " + rs.getString("ApellidoPaterno");
+                            SesionUsuario.iniciarSesionMedico(nombreCompleto);
+                            new InterfazMedica(true, id).setVisible(true);
+                            dispose();
+                            return;
+                        }
                     }
                 }
-            }
 
                 // Pacientes
                 String sqlPac = "SELECT ID FROM InformacionAlumno WHERE ID = ? AND Contraseña = ?";
@@ -169,15 +161,14 @@ public class InterfazLogin extends JFrame {
                     ps.setString(2, password);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            SesionUsuario.iniciarSesion(id); // ← NECESARIO
+                            SesionUsuario.iniciarSesion(id);
                             new InterfazMedica(false, id).setVisible(true);
                             dispose();
                             return;
                         }
-
                     }
                 }
-                // Falló
+                // Fallo
                 JOptionPane.showMessageDialog(this,
                         "ID o contraseña incorrectos.",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -188,66 +179,27 @@ public class InterfazLogin extends JFrame {
             }
         });
 
-        btnRecuperar.addActionListener(e -> {
-            new RecuperarContrasenaFrame().setVisible(true);
-            dispose();
-        });
-    }
-
-    private JPanel createControlPanel() {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        p.setOpaque(false);
-        p.add(makeControlButton("_", e -> setState(Frame.ICONIFIED)));
-        p.add(makeControlButton("□", e -> toggleMaximize()));
-        p.add(makeControlButton("✕", e -> System.exit(0)));
-        return p;
-    }
-
-    private JButton makeControlButton(String texto, ActionListener action) {
-        JButton b = new JButton(texto);
-        b.setPreferredSize(new Dimension(30, 30));
-        b.setFont(new Font("Dialog", Font.BOLD, 12));
-        b.setFocusPainted(false);
-        b.setBorder(null);
-        b.setForeground(Color.WHITE);
-        b.setBackground(new Color(255, 102, 0));
-        b.addActionListener(action);
-        b.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                b.setBackground(new Color(230, 80, 0));
-            }
-
-            public void mouseExited(MouseEvent e) {
-                b.setBackground(new Color(255, 102, 0));
+        lblRecuperar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new RecuperarContrasenaFrame().setVisible(true);
+                dispose();
             }
         });
-        return b;
-    }
 
-    private void toggleMaximize() {
-        if ((getExtendedState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH)
-            setExtendedState(Frame.MAXIMIZED_BOTH);
-        else
-            setExtendedState(Frame.NORMAL);
-    }
-
-    private void enableDrag(JComponent comp) {
-        comp.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                comp.putClientProperty("dragOrigin", e.getPoint());
-            }
-        });
-        comp.addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                Point origin = (Point) comp.getClientProperty("dragOrigin");
-                Point loc = getLocation();
-                setLocation(loc.x + e.getX() - origin.x,
-                        loc.y + e.getY() - origin.y);
+        lblInvitado.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new InterfazMedica(false, -1).setVisible(true);
+                dispose();
             }
         });
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new InterfazLogin().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            TemaUDLAP.inicializar();
+            new InterfazLogin().setVisible(true);
+        });
     }
 }
