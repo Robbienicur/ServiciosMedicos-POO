@@ -1,6 +1,8 @@
 package Inicio;
 
 import Utilidades.*;
+import Utilidades.ui.BotonUDLAP;
+import Utilidades.ui.SidebarPanel;
 import BaseDeDatos.ConexionSQLite;
 import Consultas.PanelConsultaNueva;
 import Emergencias.PanelLlamadaEmergencia;
@@ -33,6 +35,8 @@ public class InterfazMedica extends JFrame {
     private JLabel notificationIcon;
     private ImageIcon iconDefault, iconNew;
     private boolean hasNewNotification = false;
+    private JLabel sectionTitle;
+    private SidebarPanel sidebar;
 
     public InterfazMedica(boolean esMedico, int userId) {
         this.esMedico = esMedico;
@@ -91,91 +95,121 @@ public class InterfazMedica extends JFrame {
     }
 
     private void initUI() {
-        setUndecorated(true);
+        setTitle("Servicios Médicos UDLAP");
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JPanel contenedorBarras = new JPanel();
-        contenedorBarras.setLayout(new BoxLayout(contenedorBarras, BoxLayout.Y_AXIS));
-        contenedorBarras.add(new BarraVentanaUDLAP(this));
-        contenedorBarras.add(crearTopPanel());
-        add(contenedorBarras, BorderLayout.NORTH);
+        // WEST: SidebarPanel
+        String[] menuLabels = esMedico
+                ? new String[]{"Inicio", "Registrar Paciente", "Consulta Nueva", "Historial Médico", "Justificantes", "Emergencias"}
+                : new String[]{"Inicio", "Mis Citas", "Historial Médico", "Justificantes", "Reportar Emergencia"};
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(ColoresUDLAP.BLANCO);
-        add(mainPanel, BorderLayout.CENTER);
+        String userRole = esMedico ? "Médico" : "Paciente";
 
-        JPanel menuPanel = crearMenuPanel();
-        mainPanel.add(menuPanel, BorderLayout.WEST);
+        sidebar = new SidebarPanel(nombreUsuario, userRole, menuLabels, idx -> manejarClick(idx));
+        add(sidebar, BorderLayout.WEST);
 
+        // NORTH: Top bar
+        add(crearTopPanel(), BorderLayout.NORTH);
+
+        // CENTER: contentPanel with CardLayout
         contentPanel = new JPanel(new CardLayout());
-        contentPanel.setBackground(Color.WHITE);
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
+        add(contentPanel, BorderLayout.CENTER);
 
         panelManager = new PanelManager(contentPanel);
+
+        // Register panel0 (portada/home)
+        panelManager.registerPanel(new PanelProvider() {
+            public JPanel getPanel() { return new PanelPortada(); }
+            public String getPanelName() { return "panel0"; }
+        });
+
         registrarPaneles();
         panelManager.showPanel("panel0");
     }
 
-private JPanel crearMenuPanel() {
-        JPanel menu = new JPanel();
-        menu.setBackground(ColoresUDLAP.BLANCO);
-        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
-        menu.setBorder(BorderFactory.createEmptyBorder(15, 8, 8, 8));
+    private JPanel crearTopPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(233, 236, 239)),
+                BorderFactory.createEmptyBorder(0, 20, 0, 20)
+        ));
+        panel.setPreferredSize(new Dimension(0, 56));
 
-        String[] items = esMedico
-                ? new String[] { "Registrar Paciente", "Consulta Nueva", "Historial Médico", "Justificantes",
-                        "Emergencias", "Accidente" }
-                : new String[] { "Mis Citas", "Historial Médico", "Justificantes", "Reportar Emergencia" };
+        // Left: section title
+        sectionTitle = new JLabel("Inicio");
+        sectionTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        sectionTitle.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
 
-        Font btnFont = new Font("Arial", Font.BOLD, 20);
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        left.setOpaque(false);
+        left.add(sectionTitle);
 
-        for (int i = 0; i < items.length; i++) {
-            String textoHtml = "<html><div style='text-align:center;'>"
-                    + items[i].replace("\n", "<br>")
-                    + "</div></html>";
+        // Right: notification bell + user name + logout button
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
+        right.setOpaque(false);
 
-            // Determinamos color base y hover
-            Color baseColor;
-            Color hoverColor;
-
-            // Si es la opción de reportar emergencia (usuarios)
-            if (!esMedico && "Reportar Emergencia".equals(items[i])) {
-                baseColor = ColoresUDLAP.ROJO;
-                hoverColor = ColoresUDLAP.ROJO_HOVER;
+        notificationIcon = new JLabel(iconDefault);
+        notificationIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        notificationIcon.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                mostrarNotificaciones();
             }
+        });
+        right.add(notificationIcon);
 
-            else {
-                boolean par = (i % 2 == 0);
-                baseColor = par ? ColoresUDLAP.VERDE : ColoresUDLAP.NARANJA;
-                hoverColor = par ? ColoresUDLAP.VERDE_HOVER : ColoresUDLAP.NARANJA_HOVER;
-            }
+        JLabel lblNombre = new JLabel(nombreUsuario);
+        lblNombre.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblNombre.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        right.add(lblNombre);
 
-            JButton boton = botonTransparente(textoHtml, baseColor, hoverColor, btnFont);
-            int idx = i;
-            boton.addActionListener(e -> manejarClick(idx));
-            boton.setMaximumSize(new Dimension(260, 80));
+        BotonUDLAP btnCerrarSesion = BotonUDLAP.neutro("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(e -> {
+            dispose();
+            new InterfazLogin().setVisible(true);
+        });
+        right.add(btnCerrarSesion);
 
-            menu.add(boton);
-            menu.add(Box.createVerticalStrut(10));
-        }
-
-        return menu;
+        panel.add(left, BorderLayout.WEST);
+        panel.add(right, BorderLayout.EAST);
+        return panel;
     }
 
     private void manejarClick(int idx) {
-        String[] medicoKeys = { "formularioRegistro", "consultaNueva", "historialMedico", "justificantes",
-                "llamadaEmergencia", "reporteAccidente" };
-        String[] pacienteKeys = { "panelGestionCitas", "historialMedico", "justificantesPaciente",
-                "reportarEmergencia" };
-        String key = esMedico ? medicoKeys[idx] : pacienteKeys[idx];
-        panelManager.showPanel(key);
-    }
+        if (idx == 0) {
+            panelManager.showPanel("panel0");
+            sectionTitle.setText("Inicio");
+            return;
+        }
 
-    // Fragmento de InterfazMedica.java con registrarPaneles() actualizado para usar
-    // PanelHistorialMedicoEditable
+        // Shift index by 1 since index 0 is "Inicio" (handled above)
+        int shiftedIdx = idx - 1;
+
+        String[] medicoKeys = {"formularioRegistro", "consultaNueva", "historialMedico", "justificantes",
+                "llamadaEmergencia"};
+        String[] pacienteKeys = {"panelGestionCitas", "historialMedico", "justificantesPaciente",
+                "reportarEmergencia"};
+
+        String[] medicoTitles = {"Registrar Paciente", "Consulta Nueva", "Historial Médico", "Justificantes", "Emergencias"};
+        String[] pacienteTitles = {"Mis Citas", "Historial Médico", "Justificantes", "Reportar Emergencia"};
+
+        if (esMedico) {
+            if (shiftedIdx < medicoKeys.length) {
+                panelManager.showPanel(medicoKeys[shiftedIdx]);
+                sectionTitle.setText(medicoTitles[shiftedIdx]);
+            }
+        } else {
+            if (shiftedIdx < pacienteKeys.length) {
+                panelManager.showPanel(pacienteKeys[shiftedIdx]);
+                sectionTitle.setText(pacienteTitles[shiftedIdx]);
+            }
+        }
+    }
 
     private void registrarPaneles() {
         if (esMedico) {
@@ -195,7 +229,7 @@ private JPanel crearMenuPanel() {
 
             panelManager.registerPanel(new PanelProvider() {
                 public JPanel getPanel() {
-                    return new PanelMenuJustificantes(panelManager); // ✅ se pasa el PanelManager
+                    return new PanelMenuJustificantes(panelManager); // se pasa el PanelManager
                 }
                 public String getPanelName() {
                     return "justificantes";
@@ -207,7 +241,7 @@ private JPanel crearMenuPanel() {
 
            panelManager.registerPanel(new PanelProvider() {
     public JPanel getPanel() {
-        return new Emergencias.FormularioAccidenteCompleto();  // Usa tu nueva clase aquí
+        return new Emergencias.FormularioAccidenteCompleto();
     }
 
     public String getPanelName() {
@@ -263,79 +297,6 @@ private JPanel crearMenuPanel() {
                 }
             });
         }
-    }
-
-    private JPanel crearTopPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(ColoresUDLAP.BLANCO);
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
-        panel.setPreferredSize(new Dimension(0, 56));
-
-        JLabel saludo = new JLabel("Hola, " + nombreUsuario);
-        saludo.setForeground(ColoresUDLAP.VERDE_OSCURO);
-        saludo.setFont(new Font("Arial", Font.PLAIN, 18));
-
-        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 12));
-        left.setOpaque(false);
-        left.add(saludo);
-
-        JLabel titulo = new JLabel(
-                "<html><span style='font-size:25pt;font-weight:bold;color:#006400;'>Servicios Médicos</span> <span style='font-size:25pt;font-weight:bold;color:#FF6600;'>UDLAP</span></html>",
-                SwingConstants.CENTER);
-        JPanel center = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
-        center.setOpaque(false);
-        center.add(titulo);
-
-        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 5));
-        right.setOpaque(false);
-
-        notificationIcon = new JLabel(iconDefault);
-        notificationIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        notificationIcon.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                mostrarNotificaciones();
-            }
-        });
-        right.add(notificationIcon);
-
-        JButton cerrarSesion = new JButton("Cerrar sesión");
-        cerrarSesion.setFont(new Font("Arial", Font.BOLD, 15));
-        cerrarSesion.setBackground(ColoresUDLAP.NARANJA_BARRA);
-        cerrarSesion.setForeground(Color.WHITE);
-        cerrarSesion.setFocusPainted(false);
-        cerrarSesion.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        cerrarSesion.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
-        cerrarSesion.addActionListener(e -> {
-            new InterfazLogin().setVisible(true);
-            dispose();
-        });
-        right.add(cerrarSesion);
-
-        panel.add(left, BorderLayout.WEST);
-        panel.add(center, BorderLayout.CENTER);
-        panel.add(right, BorderLayout.EAST);
-        return panel;
-    }
-
-    private JButton botonTransparente(String texto, Color base, Color hover, Font font) {
-        JButton button = new JButton(texto) {
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setFont(font);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
     }
 
     private String fetchNombreUsuario() {
