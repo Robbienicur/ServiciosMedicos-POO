@@ -2,12 +2,14 @@
 package Emergencias;
 
 import Utilidades.ColoresUDLAP;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
-import javax.swing.border.Border;
 
 import java.sql.*;
 
@@ -36,21 +38,24 @@ public class FormularioLlamadaEmergencia extends JPanel {
 
     private void inicializarComponentes() {
         setLayout(new GridBagLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 12);
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, 14);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         JLabel lblTitulo = new JLabel("Formulario de Emergencia", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-        lblTitulo.setForeground(ColoresUDLAP.VERDE_OSCURO);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        lblTitulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(0, 0, 12, 0)));
         add(lblTitulo, gbc);
 
         gbc.gridwidth = 1;
@@ -58,6 +63,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblNombre = new JLabel("Nombre del Paciente:");
         lblNombre.setFont(labelFont);
+        lblNombre.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblNombre, gbc);
 
         gbc.gridx = 1;
@@ -65,13 +71,14 @@ public class FormularioLlamadaEmergencia extends JPanel {
         campoNombrePaciente.setFont(fieldFont);
         campoNombrePaciente.setEditable(false);
         campoNombrePaciente.setBorder(getCampoBorde());
-        campoNombrePaciente.setForeground(Color.GRAY);
+        campoNombrePaciente.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(campoNombrePaciente, gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
         JLabel lblID = new JLabel("ID del Paciente:");
         lblID.setFont(labelFont);
+        lblID.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblID, gbc);
 
         gbc.gridx = 1;
@@ -116,6 +123,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblResp = new JLabel("Médico Responsable:");
         lblResp.setFont(labelFont);
+        lblResp.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblResp, gbc);
 
         gbc.gridx = 1;
@@ -128,6 +136,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblUbi = new JLabel("Ubicación:");
         lblUbi.setFont(labelFont);
+        lblUbi.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblUbi, gbc);
 
         gbc.gridx = 1;
@@ -140,6 +149,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblTipo = new JLabel("Tipo de Emergencia:");
         lblTipo.setFont(labelFont);
+        lblTipo.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblTipo, gbc);
 
         gbc.gridx = 1;
@@ -155,11 +165,12 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblGrav = new JLabel("Gravedad:");
         lblGrav.setFont(labelFont);
+        lblGrav.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblGrav, gbc);
 
         gbc.gridx = 1;
         JPanel panelGravedad = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panelGravedad.setBackground(ColoresUDLAP.BLANCO);
+        panelGravedad.setOpaque(false);
         rbRojo = new JRadioButton("Rojo");
         rbNaranja = new JRadioButton("Naranja");
         rbAmarillo = new JRadioButton("Amarillo");
@@ -184,6 +195,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblFecha = new JLabel("Fecha del Incidente:");
         lblFecha.setFont(labelFont);
+        lblFecha.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblFecha, gbc);
 
         gbc.gridx = 1;
@@ -195,6 +207,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblTel = new JLabel("Teléfono de Contacto:");
         lblTel.setFont(labelFont);
+        lblTel.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblTel, gbc);
 
         gbc.gridx = 1;
@@ -207,10 +220,12 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         JLabel lblDesc = new JLabel("Descripción:");
         lblDesc.setFont(labelFont);
+        lblDesc.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(lblDesc, gbc);
 
         gbc.gridx = 1;
         areaDescripcion = new JTextArea(5, 20);
+        areaDescripcion.setFont(fieldFont);
         areaDescripcion.setBorder(getCampoBorde());
         add(new JScrollPane(areaDescripcion), gbc);
 
@@ -218,15 +233,15 @@ public class FormularioLlamadaEmergencia extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         errorLabel = new JLabel("", SwingConstants.CENTER);
-        errorLabel.setFont(fieldFont);
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         add(errorLabel, gbc);
 
         gbc.gridy++;
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setOpaque(false);
 
-        JButton btnRegistrar = botonTransparente("Registrar Emergencia", ColoresUDLAP.VERDE, ColoresUDLAP.VERDE_HOVER);
+        JButton btnRegistrar = BotonUDLAP.primario("Registrar Emergencia");
         panelBotones.add(btnRegistrar);
         add(panelBotones, gbc);
 
@@ -251,31 +266,9 @@ public class FormularioLlamadaEmergencia extends JPanel {
         }
     }
 
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
-    }
-
     private Border getCampoBorde() {
         return BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
@@ -297,7 +290,7 @@ public class FormularioLlamadaEmergencia extends JPanel {
 private void registrarEmergencia() {
     String ubicacion = campoUbicacion.getText().trim();
     if (ubicacion.isEmpty()) {
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         errorLabel.setText("La ubicación es obligatoria.");
         return;
     }
@@ -367,7 +360,7 @@ private void registrarEmergencia() {
 );
 
 if (exito) {
-    errorLabel.setForeground(new Color(0, 128, 0));
+    errorLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
     errorLabel.setText("Emergencia registrada correctamente.");
 
     campoUbicacion.setText("");
@@ -377,23 +370,16 @@ if (exito) {
     comboTipoEmergencia.setSelectedIndex(0);
     comboResponsable.setSelectedIndex(0);
 } else {
-    errorLabel.setForeground(Color.RED);
+    errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
     errorLabel.setText("No se pudo registrar la emergencia.");
 }
 
-
-
-
-
-
     } catch (Exception e) {
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         errorLabel.setText("Error: " + e.getMessage());
         e.printStackTrace();
     }
 }
-
-
 
 
 private boolean pacienteExiste(int idPaciente) {
@@ -402,7 +388,7 @@ private boolean pacienteExiste(int idPaciente) {
          PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setInt(1, idPaciente);
         try (ResultSet rs = ps.executeQuery()) {
-            return rs.next(); 
+            return rs.next();
         }
     } catch (SQLException ex) {
         ex.printStackTrace();
