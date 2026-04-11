@@ -10,7 +10,7 @@ public class PanelRegistroPaciente extends JPanel implements PanelProvider {
 
     public PanelRegistroPaciente() {
         setLayout(new BorderLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setOpaque(false);
 
         panelDatos = new FrameRegistro();
         JScrollPane scrollPane = new JScrollPane(panelDatos);
