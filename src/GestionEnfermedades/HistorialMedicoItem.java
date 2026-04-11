@@ -1,14 +1,15 @@
 package GestionEnfermedades;
 
+import Utilidades.ColoresUDLAP;
 import javax.swing.*;
 import java.awt.*;
 
 public class HistorialMedicoItem extends JPanel {
     public HistorialMedicoItem(String fecha, String diagnostico, String sintomas, String medicamentos, String receta) {
         setLayout(new BorderLayout());
-        setBackground(new Color(245, 245, 245));
+        setBackground(ColoresUDLAP.FONDO_NEUTRO);
         setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
         JTextArea area = new JTextArea(String.format("""
@@ -22,7 +23,8 @@ public class HistorialMedicoItem extends JPanel {
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
         area.setBackground(getBackground());
-        area.setFont(new Font("Arial", Font.PLAIN, 14));
+        area.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        area.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
         add(area, BorderLayout.CENTER);
     }
 }

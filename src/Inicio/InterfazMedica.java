@@ -136,7 +136,7 @@ public class InterfazMedica extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(233, 236, 239)),
+                BorderFactory.createMatteBorder(0, 0, 1, 0, ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(0, 20, 0, 20)
         ));
         panel.setPreferredSize(new Dimension(0, 56));
