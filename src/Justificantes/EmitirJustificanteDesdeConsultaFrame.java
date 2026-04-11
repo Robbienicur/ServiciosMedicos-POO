@@ -2,6 +2,7 @@ package Justificantes;
 
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,24 +29,23 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
         this.panelManager = panelManager;
 
         setLayout(new GridBagLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(6, 10, 6, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
-        Font titleFont = new Font("Arial", Font.BOLD, 18);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 12);
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, 14);
 
         // Título
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         JLabel titulo = new JLabel("Emitir Justificante Médico", SwingConstants.CENTER);
-        titulo.setFont(titleFont);
-        titulo.setForeground(ColoresUDLAP.VERDE_OSCURO);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
         add(titulo, gbc);
 
         gbc.gridwidth = 1;
@@ -111,7 +111,7 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
         diagnosticoArea.setLineWrap(true);
         diagnosticoArea.setWrapStyleWord(true);
         diagnosticoArea.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         add(new JScrollPane(diagnosticoArea), gbc);
 
@@ -120,8 +120,8 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         mensajeError = new JLabel();
-        mensajeError.setForeground(Color.RED);
-        mensajeError.setFont(new Font("Arial", Font.BOLD, 13));
+        mensajeError.setForeground(ColoresUDLAP.ROJO_ERROR);
+        mensajeError.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         add(mensajeError, gbc);
         gbc.gridwidth = 1;
 
@@ -130,9 +130,9 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        JButton subirArchivoBtn = botonTransparente("Subir Receta", ColoresUDLAP.AZUL, ColoresUDLAP.AZUL);
+        JButton subirArchivoBtn = BotonUDLAP.secundario("Subir Receta");
         subirArchivoBtn.addActionListener(e -> {
             JFileChooser fc = new JFileChooser();
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -140,14 +140,13 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
             }
         });
 
-        guardarBtn = botonTransparente("Emitir Justificante", ColoresUDLAP.VERDE_OSCURO, ColoresUDLAP.VERDE_OSCURO);
-
+        guardarBtn = BotonUDLAP.primario("Emitir Justificante");
         guardarBtn.addActionListener(e -> guardar());
 
-        JButton cancelarBtn = botonTransparente("Cancelar", ColoresUDLAP.ROJO, ColoresUDLAP.ROJO_HOVER);
+        JButton cancelarBtn = BotonUDLAP.neutro("Cancelar");
         cancelarBtn.addActionListener(e -> panelManager.showPanel("menuJustificantes"));
 
-        JButton regresarBtn = botonTransparente("Regresar", ColoresUDLAP.GRIS_OSCURO, ColoresUDLAP.GRIS_OSCURO);
+        JButton regresarBtn = BotonUDLAP.neutro("Regresar");
         regresarBtn.addActionListener(e -> panelManager.showPanel("justificantes"));
 
         panelBotones.add(subirArchivoBtn);
@@ -199,7 +198,7 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
     private JLabel label(String texto, Font fuente) {
         JLabel lbl = new JLabel(texto);
         lbl.setFont(fuente);
-        lbl.setForeground(ColoresUDLAP.NEGRO);
+        lbl.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         return lbl;
     }
 
@@ -207,40 +206,18 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
         JTextField t = new JTextField(20);
         t.setFont(fuente);
         t.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         return t;
     }
 
     private JPanel panelFechas(JComboBox<String> d, JComboBox<String> m, JComboBox<String> a) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panel.setBackground(ColoresUDLAP.BLANCO);
+        panel.setBackground(ColoresUDLAP.FONDO_GENERAL);
         panel.add(d);
         panel.add(m);
         panel.add(a);
         return panel;
-    }
-
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
     }
 
     private void guardar() {
@@ -275,11 +252,11 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
 
         boolean ok = JustificanteDAO.guardarJustificante(j);
         if (ok) {
-            mensajeError.setForeground(new Color(0, 153, 0));
+            mensajeError.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
             mensajeError.setText("Justificante emitido correctamente.");
             guardarBtn.setEnabled(false);
         } else {
-            mensajeError.setForeground(Color.RED);
+            mensajeError.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeError.setText("Error al guardar justificante.");
         }
 
@@ -292,7 +269,7 @@ public class EmitirJustificanteDesdeConsultaFrame extends JPanel {
             int y = Integer.parseInt((String) anio.getSelectedItem());
             return LocalDate.of(y, m, d);
         } catch (Exception e) {
-            mensajeError.setForeground(Color.RED);
+            mensajeError.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeError.setText("Fecha inválida. Verifique el día, mes y año seleccionados.");
             return null;
         }

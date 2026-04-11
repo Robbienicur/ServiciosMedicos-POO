@@ -1,6 +1,7 @@
 package GestionCitas;
 
 import Utilidades.ColoresUDLAP;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +30,7 @@ public class NotificacionCitasFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());
         setLocationRelativeTo(null);
-        getContentPane().setBackground(ColoresUDLAP.BLANCO);
+        getContentPane().setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -46,53 +47,32 @@ public class NotificacionCitasFrame extends JFrame {
         mensajeNotificacion.setEditable(false);
         mensajeNotificacion.setLineWrap(true);
         mensajeNotificacion.setWrapStyleWord(true);
-        mensajeNotificacion.setFont(new Font("Arial", Font.PLAIN, 14));
-        mensajeNotificacion.setBackground(ColoresUDLAP.BLANCO);
+        mensajeNotificacion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        mensajeNotificacion.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        mensajeNotificacion.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
         add(mensajeNotificacion, gbc);
 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        aceptarCitaButton = botonTransparente("Aceptar", ColoresUDLAP.VERDE, ColoresUDLAP.VERDE_HOVER);
+        aceptarCitaButton = BotonUDLAP.primario("Aceptar");
         add(aceptarCitaButton, gbc);
 
         gbc.gridx = 1;
-        rechazarCitaButton = botonTransparente("Rechazar", ColoresUDLAP.NARANJA, ColoresUDLAP.NARANJA_HOVER);
+        rechazarCitaButton = BotonUDLAP.secundario("Rechazar");
         add(rechazarCitaButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         estadoLabel = new JLabel("", SwingConstants.CENTER);
-        estadoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        estadoLabel.setForeground(Color.BLUE);
+        estadoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        estadoLabel.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         add(estadoLabel, gbc);
 
         aceptarCitaButton.addActionListener(e -> aceptarCita());
         rechazarCitaButton.addActionListener(e -> rechazarCita());
 
         setVisible(true);
-    }
-
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
     }
 
     private void aceptarCita() {
@@ -130,7 +110,7 @@ public class NotificacionCitasFrame extends JFrame {
 
                 conn.commit();
 
-                estadoLabel.setForeground(new Color(0, 128, 0));
+                estadoLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
                 estadoLabel.setText("Cita agendada exitosamente.");
                 aceptarCitaButton.setEnabled(false);
                 rechazarCitaButton.setEnabled(false);
@@ -139,7 +119,7 @@ public class NotificacionCitasFrame extends JFrame {
             } catch (SQLException ex) {
                 if (ex.getMessage().contains("database is locked")) {
                     intentos++;
-                    estadoLabel.setForeground(Color.RED);
+                    estadoLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
                     estadoLabel.setText("Reintentando... (" + intentos + "/" + MAX_REINTENTOS + ")");
                     try {
                         Thread.sleep(250);
@@ -148,7 +128,7 @@ public class NotificacionCitasFrame extends JFrame {
                         break;
                     }
                 } else {
-                    estadoLabel.setForeground(Color.RED);
+                    estadoLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
                     estadoLabel.setText("Error al agendar: " + ex.getMessage());
                     break;
                 }
@@ -156,7 +136,7 @@ public class NotificacionCitasFrame extends JFrame {
         }
 
         if (!exito) {
-            estadoLabel.setForeground(Color.RED);
+            estadoLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             estadoLabel.setText("No se pudo agendar la cita. Intenta más tarde.");
         }
     }
@@ -175,7 +155,7 @@ public class NotificacionCitasFrame extends JFrame {
             aceptarCitaButton.setEnabled(false);
             rechazarCitaButton.setEnabled(false);
         } catch (SQLException ex) {
-            estadoLabel.setForeground(Color.RED);
+            estadoLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             estadoLabel.setText("Error al rechazar: " + ex.getMessage());
         }
     }

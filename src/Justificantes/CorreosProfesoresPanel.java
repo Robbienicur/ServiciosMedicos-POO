@@ -2,6 +2,7 @@ package Justificantes;
 
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +18,9 @@ public class CorreosProfesoresPanel extends JPanel {
 
     private final JComboBox<Integer> countBox = new JComboBox<>();
     private final JPanel correosPanel = new JPanel();
-    private final JButton enviarBtn = new JButton("Enviar Justificante");
-    private final JButton menuBtn = new JButton("Menú Principal");
-    private final JButton backBtn = new JButton("Regresar");
+    private final JButton enviarBtn = BotonUDLAP.primario("Enviar Justificante");
+    private final JButton menuBtn = BotonUDLAP.neutro("Menú Principal");
+    private final JButton backBtn = BotonUDLAP.neutro("Regresar");
 
     private final int folio;
     private final PanelManager panelManager;
@@ -29,43 +30,33 @@ public class CorreosProfesoresPanel extends JPanel {
         this.panelManager = panelManager;
 
         setLayout(new BorderLayout(10, 10));
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         // Top
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        top.setBackground(ColoresUDLAP.BLANCO);
-        top.add(new JLabel("Cantidad de profesores:"));
+        top.setBackground(ColoresUDLAP.FONDO_GENERAL);
+        JLabel lblCantidad = new JLabel("Cantidad de profesores:");
+        lblCantidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblCantidad.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        top.add(lblCantidad);
 
         for (int i = 1; i <= 12; i++)
             countBox.addItem(i);
         countBox.setSelectedItem(3);
-        countBox.setBackground(Color.WHITE);
         top.add(countBox);
 
         countBox.addActionListener(e -> actualizarCampos((int) countBox.getSelectedItem()));
 
         // Center
         correosPanel.setLayout(new BoxLayout(correosPanel, BoxLayout.Y_AXIS));
-        correosPanel.setBackground(ColoresUDLAP.BLANCO);
+        correosPanel.setBackground(ColoresUDLAP.FONDO_GENERAL);
         actualizarCampos(3);
         JScrollPane scroll = new JScrollPane(correosPanel);
         scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         // Bottom
         JPanel bot = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        bot.setBackground(ColoresUDLAP.BLANCO);
-
-        enviarBtn.setBackground(ColoresUDLAP.VERDE_OSCURO);
-        enviarBtn.setForeground(Color.WHITE);
-        enviarBtn.setFocusPainted(false);
-
-        menuBtn.setBackground(ColoresUDLAP.NARANJA);
-        menuBtn.setForeground(Color.WHITE);
-        menuBtn.setFocusPainted(false);
-
-        backBtn.setBackground(new Color(120, 120, 120));
-        backBtn.setForeground(Color.WHITE);
-        backBtn.setFocusPainted(false);
+        bot.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         bot.add(menuBtn);
         bot.add(backBtn);
@@ -95,8 +86,12 @@ public class CorreosProfesoresPanel extends JPanel {
     private void actualizarCampos(int n) {
         correosPanel.removeAll();
         for (int i = 1; i <= n; i++) {
-            correosPanel.add(new JLabel("Correo profesor " + i + ":"));
+            JLabel lbl = new JLabel("Correo profesor " + i + ":");
+            lbl.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            lbl.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+            correosPanel.add(lbl);
             JTextField campo = new JTextField(30);
+            campo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             campo.setMaximumSize(new Dimension(400, 30));
             correosPanel.add(campo);
             correosPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -109,7 +104,8 @@ public class CorreosProfesoresPanel extends JPanel {
         List<String> correos = new ArrayList<>();
 
         for (Component comp : correosPanel.getComponents()) {
-            if (comp instanceof JTextField tf) {
+            if (comp instanceof JTextField) {
+                JTextField tf = (JTextField) comp;
                 String email = tf.getText().trim();
                 if (!email.isEmpty()) {
                     if (!email.endsWith("@udlap.mx")) {

@@ -2,6 +2,7 @@ package Justificantes;
 
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,11 +25,11 @@ public class MisJustificantesPacientePanel extends JPanel {
         this.panelManager = panelManager;
 
         setLayout(new BorderLayout(10, 10));
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         JLabel titulo = new JLabel("Mis Justificantes Médicos", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setForeground(new Color(0, 102, 0));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
         titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(titulo, BorderLayout.NORTH);
 
@@ -39,11 +40,11 @@ public class MisJustificantesPacientePanel extends JPanel {
         tabla = new JTable(modelo);
         tabla.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         tabla.setRowHeight(28);
-        tabla.setGridColor(new Color(230, 230, 230));
+        tabla.setGridColor(ColoresUDLAP.BORDE);
         tabla.setFillsViewportHeight(true);
 
         JTableHeader encabezado = tabla.getTableHeader();
-        encabezado.setBackground(new Color(255, 102, 0));
+        encabezado.setBackground(ColoresUDLAP.NARANJA_ACENTO);
         encabezado.setForeground(Color.WHITE);
         encabezado.setFont(new Font("Segoe UI", Font.BOLD, 16));
         encabezado.setPreferredSize(new Dimension(100, 40));
@@ -57,21 +58,10 @@ public class MisJustificantesPacientePanel extends JPanel {
 
         // Botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        JButton btnAbrirPDF = new JButton("Abrir Justificante PDF");
-        JButton btnRegresar = new JButton("Regresar");
-
-        btnAbrirPDF.setFont(new Font("Arial", Font.BOLD, 15));
-        btnRegresar.setFont(new Font("Arial", Font.BOLD, 15));
-
-        btnAbrirPDF.setBackground(new Color(0, 102, 0));
-        btnAbrirPDF.setForeground(Color.WHITE);
-        btnAbrirPDF.setFocusPainted(false);
-
-        btnRegresar.setBackground(new Color(221, 71, 66));
-        btnRegresar.setForeground(Color.WHITE);
-        btnRegresar.setFocusPainted(false);
+        JButton btnAbrirPDF = BotonUDLAP.primario("Abrir Justificante PDF");
+        JButton btnRegresar = BotonUDLAP.neutro("Regresar");
 
         btnAbrirPDF.addActionListener(e -> abrirSeleccionado());
         btnRegresar.addActionListener(e -> regresarAMenuJustificantes());

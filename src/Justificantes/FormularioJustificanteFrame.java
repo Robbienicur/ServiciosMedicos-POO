@@ -1,6 +1,8 @@
 package Justificantes;
 
 import Utilidades.ColoresUDLAP;
+import Utilidades.ui.BotonUDLAP;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -29,22 +31,22 @@ public class FormularioJustificanteFrame extends JPanel {
         this.panelManager = panelManager;
 
         setLayout(new GridBagLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 12);
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, 14);
 
         // Título
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         JLabel titulo = new JLabel("Solicitud de Justificante Médico", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 16));
-        titulo.setForeground(ColoresUDLAP.VERDE_OSCURO);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
         add(titulo, gbc);
 
         gbc.gridwidth = 1;
@@ -52,7 +54,10 @@ public class FormularioJustificanteFrame extends JPanel {
         // ID
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("ID:"), gbc);
+        JLabel lblId = new JLabel("ID:");
+        lblId.setFont(labelFont);
+        lblId.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblId, gbc);
         gbc.gridx = 1;
         idField = new JTextField(20);
         idField.setFont(fieldFont);
@@ -62,7 +67,10 @@ public class FormularioJustificanteFrame extends JPanel {
         // Nombre
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Nombre:"), gbc);
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setFont(labelFont);
+        lblNombre.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblNombre, gbc);
         gbc.gridx = 1;
         nombreField = new JTextField(20);
         nombreField.setFont(fieldFont);
@@ -72,7 +80,10 @@ public class FormularioJustificanteFrame extends JPanel {
         // Motivo
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Motivo:"), gbc);
+        JLabel lblMotivo = new JLabel("Motivo:");
+        lblMotivo.setFont(labelFont);
+        lblMotivo.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblMotivo, gbc);
         gbc.gridx = 1;
         motivoField = new JTextField(20);
         motivoField.setFont(fieldFont);
@@ -82,10 +93,13 @@ public class FormularioJustificanteFrame extends JPanel {
         // Fecha de inicio
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Inicio de Reposo:"), gbc);
+        JLabel lblInicio = new JLabel("Inicio de Reposo:");
+        lblInicio.setFont(labelFont);
+        lblInicio.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblInicio, gbc);
         gbc.gridx = 1;
         JPanel panelInicio = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panelInicio.setBackground(ColoresUDLAP.BLANCO);
+        panelInicio.setBackground(ColoresUDLAP.FONDO_GENERAL);
         diaInicio = new JComboBox<>(generarDias());
         mesInicio = new JComboBox<>(generarMeses());
         anioInicio = new JComboBox<>(generarAnios());
@@ -100,10 +114,13 @@ public class FormularioJustificanteFrame extends JPanel {
         // Fecha de fin
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Fin de Reposo:"), gbc);
+        JLabel lblFin = new JLabel("Fin de Reposo:");
+        lblFin.setFont(labelFont);
+        lblFin.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblFin, gbc);
         gbc.gridx = 1;
         JPanel panelFin = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panelFin.setBackground(ColoresUDLAP.BLANCO);
+        panelFin.setBackground(ColoresUDLAP.FONDO_GENERAL);
         diaFin = new JComboBox<>(generarDias());
         mesFin = new JComboBox<>(generarMeses());
         anioFin = new JComboBox<>(generarAnios());
@@ -120,8 +137,8 @@ public class FormularioJustificanteFrame extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         mensajeLabel = new JLabel("", SwingConstants.CENTER);
-        mensajeLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        mensajeLabel.setForeground(Color.RED);
+        mensajeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         add(mensajeLabel, gbc);
         gbc.gridwidth = 1;
 
@@ -130,18 +147,18 @@ public class FormularioJustificanteFrame extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        JButton subirPDF = botonTransparente("Subir Receta", ColoresUDLAP.VERDE, ColoresUDLAP.VERDE_HOVER);
-        JButton btnGuardar = botonTransparente("Guardar", ColoresUDLAP.NARANJA, ColoresUDLAP.NARANJA_HOVER);
-        JButton btnRegresar = botonTransparente("Regresar", new Color(150, 150, 150), new Color(120, 120, 120));
+        JButton subirPDF = BotonUDLAP.secundario("Subir Receta");
+        JButton btnGuardar = BotonUDLAP.primario("Guardar");
+        JButton btnRegresar = BotonUDLAP.neutro("Regresar");
         btnRegresar.addActionListener(e -> regresarAMenuJustificantes());
 
         subirPDF.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 archivoPDF = chooser.getSelectedFile();
-                mensajeLabel.setForeground(new Color(0, 100, 0));
+                mensajeLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
                 mensajeLabel.setText("Archivo cargado: " + archivoPDF.getName());
             }
         });
@@ -160,7 +177,7 @@ public class FormularioJustificanteFrame extends JPanel {
         String motivo = motivoField.getText().trim();
 
         if (id.isEmpty() || nombre.isEmpty() || motivo.isEmpty()) {
-            mensajeLabel.setForeground(Color.RED);
+            mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeLabel.setText("Completa todos los campos obligatorios.");
             return;
         }
@@ -169,13 +186,13 @@ public class FormularioJustificanteFrame extends JPanel {
         LocalDate fin = construirFecha(diaFin, mesFin, anioFin);
 
         if (!inicio.isAfter(LocalDate.now())) {
-            mensajeLabel.setForeground(Color.RED);
+            mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeLabel.setText("La fecha de inicio debe ser posterior a hoy.");
             return;
         }
 
         if (inicio.isAfter(fin)) {
-            mensajeLabel.setForeground(Color.RED);
+            mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeLabel.setText("La fecha de inicio no puede ser posterior a la de fin.");
             return;
         }
@@ -184,7 +201,7 @@ public class FormularioJustificanteFrame extends JPanel {
         boolean exito = JustificanteDAO.guardarJustificante(nuevo);
 
         if (exito) {
-            mensajeLabel.setForeground(new Color(0, 100, 0));
+            mensajeLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
             mensajeLabel.setText("Justificante guardado correctamente.");
             limpiarFormulario();
 
@@ -195,12 +212,12 @@ public class FormularioJustificanteFrame extends JPanel {
                 panelManager.mostrarPanelPersonalizado(panelCorreos);
 
             } else {
-                mensajeLabel.setForeground(Color.RED);
+                mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
                 mensajeLabel.setText("No se pudo obtener el folio para agregar correos.");
             }
 
         } else {
-            mensajeLabel.setForeground(Color.RED);
+            mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeLabel.setText("Error al guardar justificante.");
         }
     }
@@ -234,37 +251,15 @@ public class FormularioJustificanteFrame extends JPanel {
             int y = Integer.parseInt((String) anio.getSelectedItem());
             return LocalDate.of(y, m, d);
         } catch (Exception e) {
-            mensajeLabel.setForeground(Color.RED);
+            mensajeLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
             mensajeLabel.setText("Fecha inválida. Verifique el día, mes y año seleccionados.");
             return null;
         }
     }
 
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
-    }
-
     private Border getCampoBorde() {
         return BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
