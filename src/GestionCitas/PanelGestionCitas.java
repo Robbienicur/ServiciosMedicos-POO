@@ -1,8 +1,11 @@
 package GestionCitas;
 
+import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.CardPanel;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,73 +19,82 @@ public class PanelGestionCitas extends JPanel {
         this.userId = userId;
         this.panelManager = panelManager;
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(80, 80, 80, 80));
+        setLayout(new BorderLayout());
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
+        setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 
-        JLabel titulo = new JLabel("Gestión de Citas - Seleccione una opción:");
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Título
+        JLabel titulo = new JLabel("Gestión de Citas");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        titulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(0, 0, 20, 0)));
+        add(titulo, BorderLayout.NORTH);
 
-        // Botón para agendar cita
-        JButton btnAgendarCita = botonTransparente(
-                "Agendar Cita",
-                new Color(0, 102, 0, 100), // Verde transparente
-                new Color(0, 102, 0, 170) // Verde más opaco al hover
-        );
-        btnAgendarCita.setMaximumSize(new Dimension(350, 60));
-        btnAgendarCita.addActionListener(e -> {
-            panelManager.showPanel("agendarCita");
-        });
+        // Panel de cards
+        JPanel panelCards = new JPanel(new GridLayout(1, 2, 16, 0));
+        panelCards.setOpaque(false);
 
-        // Botón para modificar cita
-        JButton btnModificarCita = botonTransparente(
-                "Modificar Cita",
-                new Color(255, 102, 0, 100), // Naranja transparente
-                new Color(255, 102, 0, 170) // Naranja más opaco al hover
-        );
-        btnModificarCita.setMaximumSize(new Dimension(350, 60));
-        btnModificarCita.addActionListener(e -> {
-            panelManager.showPanel("modificarCita");
-        });
+        // Card Agendar Cita (acento verde)
+        CardPanel cardAgendar = new CardPanel(true);
+        cardAgendar.setLayout(new BorderLayout(0, 8));
+        cardAgendar.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(4, 0, 0, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(16, 20, 16, 20)));
+        cardAgendar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Agregado al panel
-        add(titulo);
-        add(Box.createVerticalStrut(40));
-        add(btnAgendarCita);
-        add(Box.createVerticalStrut(30));
-        add(btnModificarCita);
-    }
+        JLabel lblAgendarTitulo = new JLabel("Agendar Cita");
+        lblAgendarTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblAgendarTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
 
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
+        JLabel lblAgendarDesc = new JLabel("<html>Programa una nueva cita médica<br>en el servicio que necesites.</html>");
+        lblAgendarDesc.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblAgendarDesc.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+
+        cardAgendar.add(lblAgendarTitulo, BorderLayout.NORTH);
+        cardAgendar.add(lblAgendarDesc, BorderLayout.CENTER);
+
+        cardAgendar.addMouseListener(new MouseAdapter() {
             @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setFont(new Font("Arial", Font.BOLD, 19));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                button.repaint();
-            }
-
-            public void mouseExited(MouseEvent e) {
-                button.repaint();
+            public void mouseClicked(MouseEvent e) {
+                panelManager.showPanel("agendarCita");
             }
         });
-        return button;
+
+        // Card Modificar Cita (acento naranja)
+        CardPanel cardModificar = new CardPanel(true);
+        cardModificar.setLayout(new BorderLayout(0, 8));
+        cardModificar.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(4, 0, 0, 0, ColoresUDLAP.NARANJA_ACENTO),
+                BorderFactory.createEmptyBorder(16, 20, 16, 20)));
+        cardModificar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JLabel lblModificarTitulo = new JLabel("Modificar Cita");
+        lblModificarTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblModificarTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+
+        JLabel lblModificarDesc = new JLabel("<html>Cambia la fecha, hora o servicio<br>de una cita existente.</html>");
+        lblModificarDesc.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblModificarDesc.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+
+        cardModificar.add(lblModificarTitulo, BorderLayout.NORTH);
+        cardModificar.add(lblModificarDesc, BorderLayout.CENTER);
+
+        cardModificar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                panelManager.showPanel("modificarCita");
+            }
+        });
+
+        panelCards.add(cardAgendar);
+        panelCards.add(cardModificar);
+
+        JPanel centro = new JPanel(new BorderLayout());
+        centro.setOpaque(false);
+        centro.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        centro.add(panelCards, BorderLayout.NORTH);
+        add(centro, BorderLayout.CENTER);
     }
 }

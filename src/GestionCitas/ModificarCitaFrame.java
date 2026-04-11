@@ -2,8 +2,11 @@ package GestionCitas;
 
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.BotonUDLAP;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -33,23 +36,26 @@ public class ModificarCitaFrame extends JPanel {
         this.panelManager = panelManager;
 
         setLayout(new GridBagLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 12);
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, 14);
 
         // Título
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         JLabel lblTitulo = new JLabel("Modificar Cita Médica", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-        lblTitulo.setForeground(ColoresUDLAP.VERDE_OSCURO);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        lblTitulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(0, 0, 12, 0)));
         add(lblTitulo, gbc);
 
         gbc.gridwidth = 1;
@@ -57,7 +63,10 @@ public class ModificarCitaFrame extends JPanel {
 
         // ID
         gbc.gridx = 0;
-        add(new JLabel("ID:"), gbc);
+        JLabel lblID = new JLabel("ID:");
+        lblID.setFont(labelFont);
+        lblID.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblID, gbc);
 
         gbc.gridx = 1;
         campoID = new JTextField(String.valueOf(idPaciente), 20);
@@ -69,26 +78,32 @@ public class ModificarCitaFrame extends JPanel {
         // Nombre
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Nombre:"), gbc);
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setFont(labelFont);
+        lblNombre.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblNombre, gbc);
 
         gbc.gridx = 1;
         campoNombre = new JTextField("No editable", 20);
         campoNombre.setFont(fieldFont);
         campoNombre.setEditable(false);
-        campoNombre.setForeground(Color.GRAY);
+        campoNombre.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         campoNombre.setBorder(getCampoBorde());
         add(campoNombre, gbc);
 
         // Apellidos
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Apellidos:"), gbc);
+        JLabel lblApellidos = new JLabel("Apellidos:");
+        lblApellidos.setFont(labelFont);
+        lblApellidos.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblApellidos, gbc);
 
         gbc.gridx = 1;
         campoApellidos = new JTextField("No editable", 20);
         campoApellidos.setFont(fieldFont);
         campoApellidos.setEditable(false);
-        campoApellidos.setForeground(Color.GRAY);
+        campoApellidos.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
         campoApellidos.setBorder(getCampoBorde());
         add(campoApellidos, gbc);
 
@@ -96,7 +111,7 @@ public class ModificarCitaFrame extends JPanel {
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
-        JButton btnBuscar = new JButton("Buscar Citas");
+        JButton btnBuscar = BotonUDLAP.secundario("Buscar Citas");
         btnBuscar.addActionListener(e -> cargarCitas());
         add(btnBuscar, gbc);
         gbc.gridwidth = 1;
@@ -104,7 +119,11 @@ public class ModificarCitaFrame extends JPanel {
         // Combo de citas
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Selecciona tu cita:"), gbc);
+        JLabel lblSelCita = new JLabel("Selecciona tu cita:");
+        lblSelCita.setFont(labelFont);
+        lblSelCita.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblSelCita, gbc);
+
         gbc.gridx = 1;
         comboCitas = new JComboBox<>();
         comboCitas.setFont(fieldFont);
@@ -114,7 +133,10 @@ public class ModificarCitaFrame extends JPanel {
         // Servicio
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Servicio:"), gbc);
+        JLabel lblServicio = new JLabel("Servicio:");
+        lblServicio.setFont(labelFont);
+        lblServicio.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblServicio, gbc);
 
         gbc.gridx = 1;
         comboServicio = new JComboBox<>(new String[] { "Consulta", "Enfermería", "Examen Médico" });
@@ -125,11 +147,14 @@ public class ModificarCitaFrame extends JPanel {
         // Fecha
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Nueva Fecha:"), gbc);
+        JLabel lblFecha = new JLabel("Nueva Fecha:");
+        lblFecha.setFont(labelFont);
+        lblFecha.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblFecha, gbc);
 
         gbc.gridx = 1;
         JPanel panelFecha = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panelFecha.setBackground(ColoresUDLAP.BLANCO);
+        panelFecha.setOpaque(false);
 
         comboDia = new JComboBox<>(crearRango(1, 31));
         comboDia.setFont(fieldFont);
@@ -147,11 +172,14 @@ public class ModificarCitaFrame extends JPanel {
         // Hora
         gbc.gridy++;
         gbc.gridx = 0;
-        add(new JLabel("Hora de la Cita:"), gbc);
+        JLabel lblHora = new JLabel("Hora de la Cita:");
+        lblHora.setFont(labelFont);
+        lblHora.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        add(lblHora, gbc);
 
         gbc.gridx = 1;
         JPanel panelHora = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panelHora.setBackground(ColoresUDLAP.BLANCO);
+        panelHora.setOpaque(false);
 
         comboHora = new JComboBox<>(new String[] { "08", "09", "10", "11", "12", "13", "14", "15",
                 "16", "17", "18", "19", "20", "21" });
@@ -169,18 +197,18 @@ public class ModificarCitaFrame extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         errorLabel = new JLabel("", SwingConstants.CENTER);
-        errorLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         add(errorLabel, gbc);
 
         // Botones
         gbc.gridy++;
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setOpaque(false);
 
-        JButton btnModificar = botonTransparente("Modificar Cita", ColoresUDLAP.VERDE, ColoresUDLAP.VERDE_HOVER);
-        JButton btnCancelarCita = botonTransparente("Cancelar Cita", ColoresUDLAP.ROJO, ColoresUDLAP.ROJO_HOVER);
-        JButton btnVolver = botonTransparente("Volver", ColoresUDLAP.NARANJA, ColoresUDLAP.NARANJA_HOVER);
+        JButton btnModificar = BotonUDLAP.primario("Modificar Cita");
+        JButton btnCancelarCita = BotonUDLAP.secundario("Cancelar Cita");
+        JButton btnVolver = BotonUDLAP.neutro("Volver");
 
         btnModificar.addActionListener(e -> modificarCita());
 
@@ -200,7 +228,7 @@ int confirm = JOptionPane.showOptionDialog(
         JOptionPane.QUESTION_MESSAGE,
         null,
         opciones,
-        opciones[0]  // opción predeterminada
+        opciones[0]
 );
 
     if (confirm == JOptionPane.YES_OPTION) {
@@ -230,10 +258,9 @@ try (Connection conn = ConexionSQLite.conectar();
     return;
 }
 
-
-        // 🔧 Normalizar hora
+        // Normalizar hora
         if (horaLiberada.length() == 8) {
-            horaLiberada = horaLiberada.substring(0, 5); // de 10:30:00 a 10:30
+            horaLiberada = horaLiberada.substring(0, 5);
         } else if (!horaLiberada.contains(":")) {
             horaLiberada += ":00";
         }
@@ -247,18 +274,18 @@ try {
         ps.executeUpdate();
     }
 
-    errorLabel.setForeground(new Color(0, 128, 0));
+    errorLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
     errorLabel.setText("Cita cancelada.");
     cargarCitas();
 
 } catch (SQLException ex) {
-    errorLabel.setForeground(Color.RED);
+    errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
     errorLabel.setText("Error al cancelar cita.");
 }
 
 
     }
-}); // ← ✅ cierre correcto del listener
+});
 
 
 
@@ -283,9 +310,9 @@ try {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     campoNombre.setText(rs.getString("Nombre"));
-                    campoNombre.setForeground(Color.BLACK);
+                    campoNombre.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
                     campoApellidos.setText(rs.getString("ApellidoPaterno") + " " + rs.getString("ApellidoMaterno"));
-                    campoApellidos.setForeground(Color.BLACK);
+                    campoApellidos.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
                 }
             }
         } catch (SQLException ex) {
@@ -331,7 +358,7 @@ private void modificarCita() {
     String hora = (String) comboHora.getSelectedItem();
     String minuto = (String) comboMinuto.getSelectedItem();
 
-    // ✅ Validar fecha válida y futura
+    // Validar fecha válida y futura
     if (!ValidacionesCita.esFechaValida(dia, mes, año)) {
         errorLabel.setText("Fecha inválida.");
         return;
@@ -340,7 +367,7 @@ private void modificarCita() {
     String nuevaFecha = String.format("%04d-%02d-%02d", año, mes, dia);
     String nuevaHora = hora + ":" + minuto;
 
-    // 📦 Obtener cita anterior (sin cambio)
+    // Obtener cita anterior (sin cambio)
     String fechaAnterior = null, horaAnterior = null, servicioAnterior = null;
     try (Connection conn = ConexionSQLite.conectar();
          PreparedStatement ps = conn.prepareStatement("SELECT fecha, hora, servicio FROM CitasMedicas WHERE idCita=?")) {
@@ -360,13 +387,13 @@ private void modificarCita() {
 
     try (Connection conn = ConexionSQLite.conectar()) {
 
-        // ✅ Validar conflicto de horario con otras citas (excepto esta misma)
+        // Validar conflicto de horario con otras citas (excepto esta misma)
         if (ValidacionesCita.existeConflictoConOtraCita(idCita, nuevaFecha, nuevaHora, servicio)) {
             errorLabel.setText("Ya existe otra cita en ese horario.");
             return;
         }
 
-        // 🔄 Actualizar cita
+        // Actualizar cita
         try (PreparedStatement ps = conn.prepareStatement(
                 "UPDATE CitasMedicas SET fecha=?, hora=?, servicio=? WHERE idCita=?")) {
             ps.setString(1, nuevaFecha);
@@ -374,26 +401,26 @@ private void modificarCita() {
             ps.setString(3, servicio);
             ps.setInt(4, idCita);
             ps.executeUpdate();
-            errorLabel.setForeground(new Color(0, 128, 0));
+            errorLabel.setForeground(ColoresUDLAP.VERDE_PRIMARIO);
             errorLabel.setText("Cita modificada correctamente.");
             cargarCitas();
         }
 
-        // 🔔 Notificar si se liberó la anterior
+        // Notificar si se liberó la anterior
         if (!nuevaFecha.equals(fechaAnterior) || !nuevaHora.equals(horaAnterior)
                 || !servicio.equals(servicioAnterior)) {
             NotificadorListaEspera.notificarDisponibilidad(fechaAnterior, horaAnterior, servicioAnterior);
         }
 
     } catch (SQLException ex) {
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(ColoresUDLAP.ROJO_ERROR);
         errorLabel.setText("Error al modificar la cita.");
     }
 }
 
     private Border getCampoBorde() {
         return BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createLineBorder(ColoresUDLAP.BORDE),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
@@ -403,27 +430,5 @@ private void modificarCita() {
             arr[i] = desde + i;
         }
         return arr;
-    }
-
-    private JButton botonTransparente(String texto, Color base, Color hover) {
-        JButton button = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(getModel().isRollover() ? hover : base);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        return button;
     }
 }
