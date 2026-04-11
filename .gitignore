@@ -2,3 +2,4 @@
 /bin/
 # Ficheros de clase Java
 *.class
+out/
