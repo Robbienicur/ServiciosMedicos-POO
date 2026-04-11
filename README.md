@@ -1,34 +1,181 @@
-# ServiciosMedicos-POO
-  Proyecto final de la materia Programación Orientada a Objetos en el cual se creó un sistema desde cero enfocado para optimizar servicios médicos UDLAP.
+<p align="center">
+  <img src="src/icons/udlap_logo.png" alt="UDLAP Logo" width="120"/>
+</p>
 
-# Intrucciones de uso del programa y sobre el repositorio
-  ### El proyecto inicialmente se tiene que ejecutar desde **\src\Inicio\InterfazLogin**, en donde saltará la interfaz gráfica para iniciar sesión y de ahí se sigue automáticamente el flujo del programa
+<h1 align="center">Servicios Medicos UDLAP</h1>
 
-  * La branch de dev es en la que se hacían todos los merge y cuando ya se revisaba el correcto funcionamiento, se hacía el merge con el main.
-  * Se automatizó la actualización de las branches para que cuando los integrantes modificaran sus branches e hicieran los pull request, push y merge a dev las demás branches se actualizaran de igual forma haciendo que sea más llevadero el proceso para los integrantes optimizando el tiempo al reducir la cantidad de pulls que tuvieran que hacer.
-  * Los cambios del main están bloqueados para así evitar que se hiciera un cambio que no funcionara y reducir de manera significativa el riesgo general del mal funcionamiento del programa.
-  * **Inicio de sesión**
-    * Para iniciar sesiónd desde el punto de vista del médico se puede ingresar un ID entre 5000 y 5030, y la contraseña es passID, por ejemplo; ID: 5009 contraseña: pass5009
-    * Para iniciar sesión desde el punto de vista del paciente se puede ingresar un IS entre 180000 y 180030, y la contraseña funciona de forma similar a la de médico, se ingresa passID; por ejemplo: ID: 180000 contraseña: pas18000
+<p align="center">
+  <strong>Medical Services Management System for Universidad de las Americas Puebla</strong>
+</p>
 
-# Estructura del Proyecto
-  Se dividó el proyecto en diferentes áreas, la cual se le asignó a cada uno de los integrantes del equipo.
-  
-| Package               | Descripción                                                                                                                                                                                               | Integrante |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| BaseDeDatos           | Se incluyen los archivos de la base de datos, como la conexión con SQLite y la clase que, al ingresar el ID de un alumno, automáticamente busca sus otros datos.                                       | Mariana    |
-| Consultas             | Códigos del área de consultas destinados a cuando el médico está en consulta y se registran los síntomas, el diagnóstico y la información relevante de la consulta.                                      | Mariana, Robbie, Serenity(inicialmente)           |
-| Emergencias           | Área destinada a emergencias: botón de pánico, registro de llamada de emergencia y llenado del reporte de un accidente.                                                                                   | Mariana    |
-| GestiónCitas          | Perspectiva del paciente para agendar citas de Consulta, Examen médico y Enfermería; permite modificar, cancelar y, en caso de fecha ocupada, agregarse a lista de espera con notificación al liberarse. | Arlette    |
-| GestionEnfermedades   | Permite al médico acceder al historial médico de un paciente específico y al paciente visualizar su propio historial, con información de registros y consultas realizadas.                               | Robbie     |
-| Inicio                | Interfaces iniciales (Login y base) con paneles fijos (título, bienvenida y cerrar sesión), menú dinámico según rol (médico o paciente) y área central que muestra el `JFrame` correspondiente.           | Mariana    |
-| Justificantes         | Gestión de solicitudes de justificantes médicos (externos e internos); el médico puede aprobar, rechazar o generar justificantes desde consultas internas.                                             | Eduardo    |
-| Modelo                | Código para gestionar la lista de espera de citas.                                                                                                                                                         | Arlette    |
-| Registro              | Código para el registro de nuevos pacientes, creación de expediente médico y altas de pacientes.                                                                                                           | Sebastián  |
-| Utilidades            | Clases base (colores de interfaces, barra de controles, etc.) y componentes reutilizables empleados en toda la aplicación.                                                                               | Mariana    |
+<p align="center">
+  <a href="#-demo">Demo</a> &bull;
+  <a href="#-about">About</a> &bull;
+  <a href="#-features">Features</a> &bull;
+  <a href="#-tech-stack">Tech Stack</a> &bull;
+  <a href="#-getting-started">Getting Started</a> &bull;
+  <a href="#-original-project">Original Project</a> &bull;
+  <a href="#-team">Team</a>
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java"/>
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite"/>
+  <img src="https://img.shields.io/badge/Swing-007396?style=for-the-badge&logo=java&logoColor=white" alt="Swing"/>
+  <img src="https://img.shields.io/badge/FlatLaf-4CAF50?style=for-the-badge&logoColor=white" alt="FlatLaf"/>
+</p>
 
+<p align="center">
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/English-blue?style=flat-square" alt="English"/>
+  </a>
+  &nbsp;
+  <a href="README.es.md">
+    <img src="https://img.shields.io/badge/Español-red?style=flat-square" alt="Español"/>
+  </a>
+</p>
 
-## Mejoras Visuales (GUI)
-  * Incialmente se implementaron las interfaces gráficas para la interacción del usuario con el programa, sin embargo, para la entrega final, además del uso de los JFrames, se implementaron JPanels. Estos cambios hacen nuestra interfaz visualmente más atractiva y funcional, ya que sólo se cambian los paneles y no toda la interfaz, haciendo el proyecto mucho más fluido. Además este cambio nos ayudó a cambiar la paleta de colores por colores UDLAP.
-  * Encargadas de las mejoras visuales: **Arlette** y **Mariana**.
+---
+
+## Demo
+
+https://github.com/user-attachments/assets/demo.mov
+
+> If the video doesn't load above, download it directly from [`assets/demo.mov`](assets/demo.mov).
+
+---
+
+## About
+
+**Servicios Medicos UDLAP** is a desktop application for managing the medical services department at Universidad de las Americas Puebla. It provides separate interfaces for doctors and patients, covering the full workflow from patient registration to emergency management.
+
+This project is a **continuation and complete UI redesign** of the [original project](https://github.com/marianafm12/ServiciosMedicos-POO) developed as a team for the **Object-Oriented Programming (POO)** course at UDLAP. I contributed to the original codebase and then continued independently to **redesign the entire user interface** using modern design principles, FlatLaf Look & Feel, and a custom UDLAP-branded design system.
+
+### What Changed
+
+| Aspect | Original | Redesigned |
+|--------|----------|------------|
+| Look & Feel | Default Java Swing | FlatLaf Light |
+| Color System | Hardcoded inline colors | Centralized UDLAP design tokens |
+| Navigation | Alternating green/orange buttons | Clean white sidebar with active states |
+| Forms | Basic Swing fields | Material-style inputs with focus indicators |
+| Buttons | Raw JButtons | 3-variant system (primary, secondary, neutral) |
+| Components | Plain panels | Rounded cards with subtle shadows |
+| Window Chrome | Custom undecorated frame | Native decorated (modern, resizable) |
+
+---
+
+## Features
+
+### For Doctors
+
+- **Patient Registration** — Complete clinical data form with validation
+- **New Consultation** — Auto-fill patient data, symptoms, diagnosis, prescriptions
+- **Medical History** — Search and view patient records with expandable consultation cards
+- **Medical Justifications** — Review, approve, or reject absence justification requests
+- **Emergency Management** — Register emergency calls and detailed accident reports
+
+### For Patients
+
+- **Appointment Management** — Schedule and modify medical appointments
+- **Medical History** — View personal health records and past consultations
+- **Request Justifications** — Submit and track medical justification requests
+- **Report Emergency** — Quick access to medical services and campus security
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Language | Java 8+ |
+| GUI Framework | Swing + [FlatLaf](https://www.formdev.com/flatlaf/) 3.4.1 |
+| Database | SQLite (JDBC) |
+| PDF Generation | iText 2.1.7 |
+| Design System | Custom (BotonUDLAP, CampoTextoUDLAP, CardPanel, SidebarPanel) |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Java JDK 8 or higher
+
+### Run
+
+```bash
+# Clone the repository
+git clone https://github.com/Robbienicur/ServiciosMedicos-POO.git
+cd ServiciosMedicos-POO
+
+# Compile
+mkdir -p out
+javac -cp "lib/*" -d out $(find src -name "*.java")
+
+# Run
+java -cp "out:lib/*" Inicio.InterfazLogin
+```
+
+### Test Credentials
+
+| Role | ID | Password |
+|------|----|----------|
+| Doctor | 5009 | pass5009 |
+| Patient | 180000 | pass180000 |
+
+---
+
+## Project Structure
+
+```
+src/
+├── BaseDeDatos/        # SQLite database connection and queries
+├── Consultas/          # Medical consultation management
+├── Emergencias/        # Emergency calls and accident reports
+├── GestionCitas/       # Appointment scheduling and modification
+├── GestionEnfermedades/# Medical history and patient records
+├── Inicio/             # Login, main interface, session management
+├── Justificantes/      # Medical justification requests and approvals
+├── Modelo/             # Data models
+├── Registro/           # Patient registration
+├── Utilidades/         # Shared utilities and design system
+│   └── ui/             # Custom UI components (new)
+└── icons/              # Application icons
+```
+
+---
+
+## Original Project
+
+This repository is a continuation of the original team project:
+
+> **[marianafm12/ServiciosMedicos-POO](https://github.com/marianafm12/ServiciosMedicos-POO)**
+
+The original project was developed collaboratively for the Object-Oriented Programming course at UDLAP. I was an active contributor to the original codebase and continued independently to implement a complete UI overhaul with a modern design system, custom reusable components, and institutional UDLAP branding.
+
+---
+
+## Team
+
+### Original Team (POO Course)
+
+| Name | Area |
+|------|------|
+| Mariana Fernandez | Database, Consultations, Emergencies, UI Base |
+| Robbie Nicolas Curioso de Salazar | Medical History, Consultations |
+| Arlette | Appointments, UI Improvements |
+| Eduardo | Medical Justifications |
+| Sebastian | Patient Registration |
+
+### UI Redesign
+
+| Name | Contribution |
+|------|-------------|
+| Robbie Nicolas Curioso de Salazar | Complete UI/UX redesign and implementation |
+
+---
+
+## License
+
+This project was developed for academic purposes at Universidad de las Americas Puebla (UDLAP).
