@@ -39,13 +39,9 @@
 
 ## Demo
 
-<p align="center">
-  <a href="assets/demo.mov">
-    <img src="https://img.shields.io/badge/Ver_Demo-Video-006600?style=for-the-badge&logo=github&logoColor=white" alt="Ver Demo"/>
-  </a>
-</p>
+<!-- PASTE VIDEO URL HERE -->
 
-> Haz click en el boton de arriba para descargar y ver el video completo de la demo ([`assets/demo.mov`](assets/demo.mov)).
+> Video completo disponible en [`assets/demo.mp4`](assets/demo.mp4)
 
 ---
 
