@@ -3,6 +3,7 @@ package Consultas;
 import Utilidades.PanelProvider;
 import Utilidades.ColoresUDLAP;
 import Utilidades.FormularioMedicoBase;
+import Utilidades.ui.BotonUDLAP;
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -14,7 +15,9 @@ import java.sql.SQLException;
 
 public class PanelConsultaNueva extends FormularioMedicoBase implements PanelProvider {
 
-    private final JButton btnGuardar, btnBuscar, btnLimpiar;
+    private final JButton btnGuardar;
+    private final JButton btnBuscar;
+    private final JButton btnLimpiar;
 
     public PanelConsultaNueva(int idMedico, String nombreMedico) {
         super("Consulta Médica - Dr. " + nombreMedico, new String[] {
@@ -29,17 +32,12 @@ public class PanelConsultaNueva extends FormularioMedicoBase implements PanelPro
         fecha.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
         // Botones
-        btnGuardar = new JButton("Guardar");
-        btnBuscar = new JButton("Buscar");
-        btnLimpiar = new JButton("Limpiar");
+        btnGuardar = BotonUDLAP.primario("Guardar");
+        btnBuscar = BotonUDLAP.secundario("Buscar");
+        btnLimpiar = BotonUDLAP.neutro("Limpiar");
 
-        JPanel botones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        botones.setBackground(Color.WHITE);
-        Dimension size = new Dimension(120, 40);
-
-        configurarBoton(btnGuardar, ColoresUDLAP.VERDE_SOLIDO, size);
-        configurarBoton(btnBuscar, ColoresUDLAP.NARANJA_BARRA, size);
-        configurarBoton(btnLimpiar, ColoresUDLAP.ROJO_SOLIDO, size);
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        botones.setOpaque(false);
 
         botones.add(btnGuardar);
         botones.add(btnBuscar);
@@ -48,9 +46,6 @@ public class PanelConsultaNueva extends FormularioMedicoBase implements PanelPro
 
         // Referencias reales
         JTextField[] camposConsulta = getCamposTexto(0, 1, 2, 3, 7, 8, 9);
-        JTextArea sintomas = (JTextArea) campos[4];
-        JTextArea medicamentos = (JTextArea) campos[5];
-        JTextArea diagnostico = (JTextArea) campos[6];
         JTextArea receta = (JTextArea) campos[10];
 
         // Listener: ID Paciente (autollenado)
@@ -106,16 +101,5 @@ public class PanelConsultaNueva extends FormularioMedicoBase implements PanelPro
     @Override
     public String getPanelName() {
         return "consultaNueva";
-    }
-
-    private void configurarBoton(JButton boton, Color color, Dimension size) {
-        boton.setBackground(color);
-        boton.setForeground(Color.WHITE);
-        boton.setFocusPainted(false);
-        boton.setBorderPainted(false);
-        boton.setContentAreaFilled(true);
-        boton.setOpaque(true);
-        boton.setPreferredSize(size);
-        boton.setFont(new Font("Arial", Font.BOLD, 14));
     }
 }
