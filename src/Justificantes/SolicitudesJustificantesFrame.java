@@ -4,8 +4,10 @@ import java.awt.event.ActionListener;
 import BaseDeDatos.ConexionSQLite;
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelManager;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
@@ -24,15 +26,16 @@ public class SolicitudesJustificantesFrame extends JFrame {
         setTitle("Solicitudes de Justificantes");
         setSize(950, 600);
         setLocationRelativeTo(null);
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         JLabel titulo = new JLabel("Solicitudes de Justificantes", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setForeground(new Color(0, 102, 0));
-        titulo.setBackground(ColoresUDLAP.BLANCO);
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        titulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(16, 0, 12, 0)));
         add(titulo, BorderLayout.NORTH);
 
         panelCentro = new JPanel(new BorderLayout());
@@ -43,26 +46,11 @@ public class SolicitudesJustificantesFrame extends JFrame {
 
         // Panel inferior con botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        panelBotones.setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        JButton btnVer = new JButton("Ver Seleccionado");
-        JButton btnEliminar = new JButton("Eliminar");
-        JButton btnRegresar = new JButton("Regresar");
-
-        btnVer.setFont(new Font("Arial", Font.BOLD, 15));
-        btnEliminar.setFont(new Font("Arial", Font.BOLD, 15));
-        btnRegresar.setFont(new Font("Arial", Font.BOLD, 15));
-
-        btnVer.setBackground(new Color(0, 102, 0));
-        btnVer.setForeground(Color.WHITE);
-        btnVer.setFocusPainted(false);
-
-        btnEliminar.setBackground(new Color(221, 71, 66));
-        btnEliminar.setForeground(Color.WHITE);
-        btnEliminar.setFocusPainted(false);
-
-        btnRegresar.setBackground(Color.GRAY);
-        btnRegresar.setForeground(Color.WHITE);
-        btnRegresar.setFocusPainted(false);
+        JButton btnVer = BotonUDLAP.primario("Ver Seleccionado");
+        JButton btnEliminar = BotonUDLAP.secundario("Eliminar");
+        JButton btnRegresar = BotonUDLAP.neutro("Regresar");
 
         btnVer.addActionListener(e -> verSeleccionado());
         btnEliminar.addActionListener(e -> eliminarSeleccionado());
@@ -81,11 +69,11 @@ public class SolicitudesJustificantesFrame extends JFrame {
         tabla = new JTable();
         tabla.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         tabla.setRowHeight(28);
-        tabla.setGridColor(new Color(230, 230, 230));
+        tabla.setGridColor(ColoresUDLAP.BORDE);
         tabla.setFillsViewportHeight(true);
 
         JTableHeader encabezado = tabla.getTableHeader();
-        encabezado.setBackground(new Color(255, 102, 0));
+        encabezado.setBackground(ColoresUDLAP.NARANJA_ACENTO);
         encabezado.setForeground(Color.WHITE);
         encabezado.setFont(new Font("Segoe UI", Font.BOLD, 16));
         encabezado.setPreferredSize(new Dimension(100, 40));
@@ -217,7 +205,6 @@ public class SolicitudesJustificantesFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Si deseas probarlo desde aquí, puedes inicializar con null
         SwingUtilities.invokeLater(() -> new SolicitudesJustificantesFrame(null).setVisible(true));
     }
 }

@@ -2,8 +2,10 @@ package Justificantes;
 
 import BaseDeDatos.ConexionSQLite;
 import Utilidades.ColoresUDLAP;
+import Utilidades.ui.BotonUDLAP;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,23 +20,31 @@ public class PanelSolicitarJustificante extends JPanel {
     public PanelSolicitarJustificante(int idAlumno) {
         this.idAlumno = idAlumno;
         setLayout(new BorderLayout());
-        setBackground(ColoresUDLAP.BLANCO);
+        setBackground(ColoresUDLAP.FONDO_GENERAL);
 
-        JLabel titulo = new JLabel("Solicitar Justificante", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        titulo.setForeground(ColoresUDLAP.VERDE_OSCURO);
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        JLabel titulo = new JLabel("Solicitar Justificante", SwingConstants.LEFT);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        titulo.setBorder(BorderFactory.createCompoundBorder(
+                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
+                BorderFactory.createEmptyBorder(16, 24, 16, 24)));
         add(titulo, BorderLayout.NORTH);
 
         JPanel formulario = new JPanel(new GridBagLayout());
         formulario.setOpaque(false);
+        formulario.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         campoFecha = new JTextField(20);
+        campoFecha.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
         campoProfesor = new JTextField(20);
+        campoProfesor.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
         campoMotivo = new JTextArea(5, 20);
+        campoMotivo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         campoMotivo.setLineWrap(true);
         campoMotivo.setWrapStyleWord(true);
         JScrollPane scroll = new JScrollPane(campoMotivo);
@@ -45,10 +55,7 @@ public class PanelSolicitarJustificante extends JPanel {
 
         add(formulario, BorderLayout.CENTER);
 
-        JButton btnEnviar = new JButton("Enviar Solicitud");
-        btnEnviar.setBackground(ColoresUDLAP.VERDE);
-        btnEnviar.setForeground(Color.WHITE);
-        btnEnviar.setFocusPainted(false);
+        JButton btnEnviar = BotonUDLAP.primario("Enviar Solicitud");
         btnEnviar.addActionListener(e -> enviarSolicitud());
         JPanel abajo = new JPanel();
         abajo.setOpaque(false);
@@ -59,7 +66,10 @@ public class PanelSolicitarJustificante extends JPanel {
     private void agregarCampo(JPanel panel, GridBagConstraints gbc, String etiqueta, Component campo, int fila) {
         gbc.gridx = 0;
         gbc.gridy = fila;
-        panel.add(new JLabel(etiqueta), gbc);
+        JLabel lbl = new JLabel(etiqueta);
+        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lbl.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        panel.add(lbl, gbc);
         gbc.gridx = 1;
         panel.add(campo, gbc);
     }
