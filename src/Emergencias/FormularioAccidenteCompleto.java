@@ -280,7 +280,21 @@ public class FormularioAccidenteCompleto extends JPanel {
 
     private void validarFormulario() {
         try {
-            // Validación de campos
+            if (comboDia.getSelectedItem() == null || comboMes.getSelectedItem() == null
+                    || comboAnio.getSelectedItem() == null) {
+                mostrarError("Seleccione una fecha válida.");
+                return;
+            }
+
+            int dia, anio;
+            try {
+                dia = Integer.parseInt((String) comboDia.getSelectedItem());
+                anio = Integer.parseInt((String) comboAnio.getSelectedItem());
+            } catch (NumberFormatException ex) {
+                mostrarError("Fecha inválida.");
+                return;
+            }
+
             String error = ValidadorAccidente.validarCampos(
                     campoIDEmergencia.getText(),
                     campoIDPaciente.getText(),
@@ -294,9 +308,9 @@ public class FormularioAccidenteCompleto extends JPanel {
                     areaDescripcion.getText(),
                     campoCorreoContacto.getText(),
                     areaObservaciones.getText(),
-                    Integer.parseInt((String) comboDia.getSelectedItem()),
+                    dia,
                     comboMes.getSelectedIndex() + 1,
-                    Integer.parseInt((String) comboAnio.getSelectedItem()),
+                    anio,
                     campoIDContacto.getText(),
                     campoNombreContacto.getText(),
                     campoTelefonoContacto.getText());
@@ -325,14 +339,15 @@ public class FormularioAccidenteCompleto extends JPanel {
 
     private void guardarEnBaseDeDatos() {
         try {
-
             int idEmergencia = Integer.parseInt(campoIDEmergencia.getText().trim());
 
             int dia = Integer.parseInt((String) comboDia.getSelectedItem());
             int mes = comboMes.getSelectedIndex() + 1;
             int anio = Integer.parseInt((String) comboAnio.getSelectedItem());
-            int hora = Integer.parseInt((String) comboHora.getSelectedItem());
-            int minuto = Integer.parseInt((String) comboMinuto.getSelectedItem());
+            String horaStr = (String) comboHora.getSelectedItem();
+            String minutoStr = (String) comboMinuto.getSelectedItem();
+            int hora = Integer.parseInt(horaStr != null ? horaStr : "0");
+            int minuto = Integer.parseInt(minutoStr != null ? minutoStr : "0");
 
             String fecha = String.format("%04d-%02d-%02d %02d:%02d:00", anio, mes, dia, hora, minuto);
             String genero = (String) comboGenero.getSelectedItem();

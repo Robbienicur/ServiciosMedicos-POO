@@ -224,6 +224,13 @@ public class AgendaCitaFrame extends JPanel {
     }
 
     private void validarYConfirmarCita(int idPaciente) {
+        if (comboServicio.getSelectedItem() == null || comboDia.getSelectedItem() == null
+                || comboMes.getSelectedItem() == null || comboAño.getSelectedItem() == null
+                || comboHora.getSelectedItem() == null || comboMinuto.getSelectedItem() == null) {
+            errorLabel.setText("Por favor seleccione todos los campos.");
+            return;
+        }
+
         String servicio = (String) comboServicio.getSelectedItem();
         int dia = (int) comboDia.getSelectedItem();
         int mes = comboMes.getSelectedIndex() + 1;
@@ -231,9 +238,9 @@ public class AgendaCitaFrame extends JPanel {
         String hora = (String) comboHora.getSelectedItem();
         String minuto = (String) comboMinuto.getSelectedItem();
 
-        // Validación de fecha usando la clase centralizada
-        if (!ValidacionesCita.esFechaValida(dia, mes, año)) {
-            errorLabel.setText("Fecha inválida (debe ser válida y futura)");
+        if (!ValidacionesCita.esFechaHoraValida(dia, mes, año,
+                Integer.parseInt(hora), Integer.parseInt(minuto))) {
+            errorLabel.setText("Fecha/hora inválida (debe ser futura).");
             return;
         }
 

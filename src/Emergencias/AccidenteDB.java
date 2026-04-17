@@ -51,7 +51,7 @@ public static Accidente buscarAccidente(String id) {
          PreparedStatement ps = conn.prepareStatement(sql)) {
 
         ps.setString(1, id);
-        ResultSet rs = ps.executeQuery();
+        try (ResultSet rs = ps.executeQuery()) {
 
         if (rs.next()) {
             int idEmergencia = rs.getInt("IDEmergencia");
@@ -77,6 +77,7 @@ public static Accidente buscarAccidente(String id) {
                     nombreContacto, apellidosContacto,
                     correoContacto, telefonoContacto, estado
             );
+        }
         }
 
     } catch (SQLException e) {

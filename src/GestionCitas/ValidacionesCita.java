@@ -2,6 +2,7 @@ package GestionCitas;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.DateTimeException;
 import BaseDeDatos.ConexionSQLite;
 
@@ -20,7 +21,15 @@ public class ValidacionesCita {
             LocalDate fechaCita = LocalDate.of(año, mes, dia);
             return fechaCita.isAfter(LocalDate.now());
         } catch (DateTimeException e) {
-            // Ej: 30 febrero, 31 abril, etc.
+            return false;
+        }
+    }
+
+    public static boolean esFechaHoraValida(int dia, int mes, int año, int hora, int minuto) {
+        try {
+            LocalDateTime fechaHoraCita = LocalDateTime.of(año, mes, dia, hora, minuto);
+            return fechaHoraCita.isAfter(LocalDateTime.now());
+        } catch (DateTimeException e) {
             return false;
         }
     }

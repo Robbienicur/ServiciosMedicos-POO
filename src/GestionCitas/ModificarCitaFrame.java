@@ -350,7 +350,14 @@ private void modificarCita() {
         return;
     }
 
-    int idCita = Integer.parseInt(seleccion.split(":")[0].trim());
+    int idCita;
+    try {
+        idCita = Integer.parseInt(seleccion.split(":")[0].trim());
+    } catch (NumberFormatException e) {
+        errorLabel.setText("Error al leer la cita seleccionada.");
+        return;
+    }
+
     String servicio = (String) comboServicio.getSelectedItem();
     int dia = (Integer) comboDia.getSelectedItem();
     int mes = comboMes.getSelectedIndex() + 1;
@@ -358,9 +365,9 @@ private void modificarCita() {
     String hora = (String) comboHora.getSelectedItem();
     String minuto = (String) comboMinuto.getSelectedItem();
 
-    // Validar fecha válida y futura
-    if (!ValidacionesCita.esFechaValida(dia, mes, año)) {
-        errorLabel.setText("Fecha inválida.");
+    if (!ValidacionesCita.esFechaHoraValida(dia, mes, año,
+            Integer.parseInt(hora), Integer.parseInt(minuto))) {
+        errorLabel.setText("Fecha/hora inválida (debe ser futura).");
         return;
     }
 
