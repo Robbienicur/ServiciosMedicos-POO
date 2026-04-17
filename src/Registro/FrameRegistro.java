@@ -9,7 +9,7 @@ public class FrameRegistro extends JPanel {
     private final JTextField[] campos;
     private final String[] etiquetas = {
             "ID:", "Nombre:", "Apellido Paterno:", "Apellido Materno:", "Correo:",
-            "Edad:", "Altura (cm):", "Peso (kg):",
+            "Edad:", "Altura (cm):", "Peso (kg):", "Tipo de Sangre:",
             "Enfermedades Preexistentes:", "Medicación:", "Alergias:"
     };
 

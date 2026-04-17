@@ -76,12 +76,13 @@ public class AgregarRegistro implements ActionListener {
         String edad = campos[5].getText().trim();
         String altura = campos[6].getText().trim();
         String peso = campos[7].getText().trim();
-        String enfermedades = campos[8].getText().trim();
-        String medicacion = campos[9].getText().trim();
-        String alergias = campos[10].getText().trim();
+        String tipoSangre = campos[8].getText().trim();
+        String enfermedades = campos[9].getText().trim();
+        String medicacion = campos[10].getText().trim();
+        String alergias = campos[11].getText().trim();
 
         if (!ValidadorPaciente.estanTodosLlenos(id, nombre, apellidoP, apellidoM, correo, edad, altura, peso,
-                enfermedades, medicacion, alergias)) {
+                tipoSangre, enfermedades, medicacion, alergias)) {
             JOptionPane.showMessageDialog(null, "Todos los campos deben estar llenos.");
             return;
         }
@@ -144,25 +145,27 @@ public class AgregarRegistro implements ActionListener {
 
             if (rsRegistro.next()) {
                 PreparedStatement updateRegistro = conn.prepareStatement(
-                        "UPDATE Registro SET Edad=?, Altura=?, Peso=?, EnfermedadesPreexistentes=?, Medicacion=?, Alergias=? WHERE ID=?");
+                        "UPDATE Registro SET Edad=?, Altura=?, Peso=?, TipoSangre=?, EnfermedadesPreexistentes=?, Medicacion=?, Alergias=? WHERE ID=?");
                 updateRegistro.setString(1, edad);
                 updateRegistro.setString(2, altura);
                 updateRegistro.setString(3, peso);
-                updateRegistro.setString(4, enfermedades);
-                updateRegistro.setString(5, medicacion);
-                updateRegistro.setString(6, alergias);
-                updateRegistro.setInt(7, idInt);
+                updateRegistro.setString(4, tipoSangre);
+                updateRegistro.setString(5, enfermedades);
+                updateRegistro.setString(6, medicacion);
+                updateRegistro.setString(7, alergias);
+                updateRegistro.setInt(8, idInt);
                 updateRegistro.executeUpdate();
             } else {
                 PreparedStatement insertRegistro = conn.prepareStatement(
-                        "INSERT INTO Registro (ID, Edad, Altura, Peso, EnfermedadesPreexistentes, Medicacion, Alergias) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                        "INSERT INTO Registro (ID, Edad, Altura, Peso, TipoSangre, EnfermedadesPreexistentes, Medicacion, Alergias) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 insertRegistro.setInt(1, idInt);
                 insertRegistro.setString(2, edad);
                 insertRegistro.setString(3, altura);
                 insertRegistro.setString(4, peso);
-                insertRegistro.setString(5, enfermedades);
-                insertRegistro.setString(6, medicacion);
-                insertRegistro.setString(7, alergias);
+                insertRegistro.setString(5, tipoSangre);
+                insertRegistro.setString(6, enfermedades);
+                insertRegistro.setString(7, medicacion);
+                insertRegistro.setString(8, alergias);
                 insertRegistro.executeUpdate();
             }
 
