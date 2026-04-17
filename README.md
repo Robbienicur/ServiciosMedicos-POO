@@ -39,7 +39,11 @@
 
 ## Demo
 
-https://github.com/Robbienicur/ServiciosMedicos-POO/raw/main/assets/demo.mp4
+
+
+https://github.com/user-attachments/assets/b3dba2ac-19b2-4b47-9806-b6ed6d1cf2a1
+
+
 
 
 ---
