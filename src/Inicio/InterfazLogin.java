@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import BaseDeDatos.ConexionSQLite;
+import BaseDeDatos.InicializadorBD;
+import GestionCitas.RecordatorioCitasService;
+import Utilidades.AuditLogDAO;
 import Utilidades.ColoresUDLAP;
 import Utilidades.ui.TemaUDLAP;
 import Utilidades.ui.BotonUDLAP;
@@ -146,7 +149,8 @@ public class InterfazLogin extends JFrame {
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             String nombreCompleto = rs.getString("Nombre") + " " + rs.getString("ApellidoPaterno");
-                            SesionUsuario.iniciarSesionMedico(nombreCompleto);
+                            SesionUsuario.iniciarSesionMedico(id, nombreCompleto);
+                            AuditLogDAO.registrar(id, "LOGIN", "Inicio de sesión médico: " + nombreCompleto);
                             new InterfazMedica(true, id).setVisible(true);
                             dispose();
                             return;
@@ -162,6 +166,7 @@ public class InterfazLogin extends JFrame {
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             SesionUsuario.iniciarSesion(id);
+                            AuditLogDAO.registrar(id, "LOGIN", "Inicio de sesión paciente");
                             new InterfazMedica(false, id).setVisible(true);
                             dispose();
                             return;
@@ -183,7 +188,6 @@ public class InterfazLogin extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 new RecuperarContrasenaFrame().setVisible(true);
-                dispose();
             }
         });
 
@@ -197,6 +201,8 @@ public class InterfazLogin extends JFrame {
     }
 
     public static void main(String[] args) {
+        InicializadorBD.inicializar();
+        RecordatorioCitasService.iniciar();
         SwingUtilities.invokeLater(() -> {
             TemaUDLAP.inicializar();
             new InterfazLogin().setVisible(true);
