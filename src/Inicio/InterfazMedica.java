@@ -63,6 +63,17 @@ public class InterfazMedica extends JFrame {
         if (!esMedico) {
             hasNewNotification = NotificacionDAO.tieneNotificacionesNoLeidas(userId);
             System.out.println("¿Tiene notificaciones pendientes? " + hasNewNotification);
+        } else if (esMedico) {
+            // Doctors get notified about new justificante requests and emergencies
+            try (Connection conn = ConexionSQLite.conectar()) {
+                String sql = "SELECT COUNT(*) FROM Notificaciones WHERE idPaciente = ? AND estado = 'pendiente'";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, userId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) hasNewNotification = rs.getInt(1) > 0;
+                    }
+                }
+            } catch (SQLException e) { /* ignore */ }
         }
 
         if (notificationIcon != null) {
@@ -72,10 +83,24 @@ public class InterfazMedica extends JFrame {
 
     private void mostrarNotificaciones() {
         if (esMedico) {
-            JOptionPane.showMessageDialog(this,
-                    "Funcionalidad de notificaciones para médicos en desarrollo.",
-                    "Notificaciones Médicas",
-                    JOptionPane.INFORMATION_MESSAGE);
+            List<NotificacionDAO.Notificacion> lista = NotificacionDAO.obtenerNotificaciones(userId);
+            if (lista.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No hay nuevas notificaciones.",
+                        "Notificaciones", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                StringBuilder sb = new StringBuilder("<html><b>Notificaciones:</b><br><br>");
+                for (NotificacionDAO.Notificacion n : lista) {
+                    sb.append("- ").append(n.servicio).append(" | ").append(n.fecha)
+                      .append(" ").append(n.hora).append("<br>");
+                    NotificacionDAO.marcarComoAtendida(n.idNotificacion);
+                }
+                sb.append("</html>");
+                JOptionPane.showMessageDialog(this, sb.toString(),
+                        "Notificaciones Médicas", JOptionPane.INFORMATION_MESSAGE);
+            }
+            hasNewNotification = false;
+            if (notificationIcon != null) notificationIcon.setIcon(iconDefault);
             return;
         }
 

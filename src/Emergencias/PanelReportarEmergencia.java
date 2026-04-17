@@ -1,100 +1,203 @@
 package Emergencias;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import Utilidades.ColoresUDLAP;
 import Utilidades.PanelProvider;
-import Utilidades.ui.CardPanel;
+import Inicio.SesionUsuario;
 
 public class PanelReportarEmergencia extends JPanel implements PanelProvider {
 
+    private JTextArea descripcion;
+    private JTextField ubicacion;
+    private JComboBox<String> tipoEmergencia;
+    private JComboBox<String> gravedad;
+
     public PanelReportarEmergencia() {
         setLayout(new BorderLayout());
-        setBackground(ColoresUDLAP.FONDO_GENERAL);
-        setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
+        setBackground(ColoresUDLAP.BLANCO);
 
-        // Título
-        JLabel titulo = new JLabel("Reportar Emergencia");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        titulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
-        titulo.setBorder(BorderFactory.createCompoundBorder(
-                new MatteBorder(0, 0, 2, 0, ColoresUDLAP.VERDE_PRIMARIO),
-                BorderFactory.createEmptyBorder(0, 0, 20, 0)));
+        // Titulo
+        JLabel titulo = new JLabel("Reportar Emergencia", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setForeground(ColoresUDLAP.ROJO_SOLIDO);
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(titulo, BorderLayout.NORTH);
 
-        // Panel de cards
-        JPanel panelCards = new JPanel(new GridLayout(1, 2, 16, 0));
-        panelCards.setOpaque(false);
+        // Panel central con formulario
+        JPanel centro = new JPanel(new GridBagLayout());
+        centro.setBackground(ColoresUDLAP.BLANCO);
+        centro.setBorder(BorderFactory.createEmptyBorder(10, 60, 10, 60));
 
-        // Card Servicios Médicos (acento verde)
-        CardPanel cardMedicos = new CardPanel(true);
-        cardMedicos.setLayout(new BorderLayout(0, 8));
-        cardMedicos.setBorder(BorderFactory.createCompoundBorder(
-                new MatteBorder(4, 0, 0, 0, ColoresUDLAP.VERDE_PRIMARIO),
-                BorderFactory.createEmptyBorder(20, 24, 20, 24)));
-        cardMedicos.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel lblMedicosTitulo = new JLabel("Llamar a Servicios Médicos");
-        lblMedicosTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblMedicosTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
+        Font labelFont = new Font("Arial", Font.BOLD, 14);
+        Font fieldFont = new Font("Arial", Font.PLAIN, 14);
 
-        JLabel lblMedicosDesc = new JLabel("<html>Contacta de inmediato con el<br>personal médico de UDLAP.</html>");
-        lblMedicosDesc.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblMedicosDesc.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
+        // Tipo de emergencia
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        JLabel lblTipo = new JLabel("Tipo de Emergencia:");
+        lblTipo.setFont(labelFont);
+        centro.add(lblTipo, gbc);
 
-        cardMedicos.add(lblMedicosTitulo, BorderLayout.NORTH);
-        cardMedicos.add(lblMedicosDesc, BorderLayout.CENTER);
-
-        cardMedicos.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarLlamada("Servicios Médicos");
-            }
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        tipoEmergencia = new JComboBox<>(new String[]{
+                "Medica", "Accidente", "Seguridad", "Otra"
         });
+        tipoEmergencia.setFont(fieldFont);
+        centro.add(tipoEmergencia, gbc);
 
-        // Card Seguridad UDLAP (acento naranja)
-        CardPanel cardSeguridad = new CardPanel(true);
-        cardSeguridad.setLayout(new BorderLayout(0, 8));
-        cardSeguridad.setBorder(BorderFactory.createCompoundBorder(
-                new MatteBorder(4, 0, 0, 0, ColoresUDLAP.NARANJA_ACENTO),
-                BorderFactory.createEmptyBorder(20, 24, 20, 24)));
-        cardSeguridad.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // Gravedad
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        JLabel lblGravedad = new JLabel("Gravedad:");
+        lblGravedad.setFont(labelFont);
+        centro.add(lblGravedad, gbc);
 
-        JLabel lblSeguridadTitulo = new JLabel("Llamar a Seguridad UDLAP");
-        lblSeguridadTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblSeguridadTitulo.setForeground(ColoresUDLAP.TEXTO_PRINCIPAL);
-
-        JLabel lblSeguridadDesc = new JLabel("<html>Solicita asistencia del departamento<br>de seguridad de la universidad.</html>");
-        lblSeguridadDesc.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblSeguridadDesc.setForeground(ColoresUDLAP.TEXTO_SECUNDARIO);
-
-        cardSeguridad.add(lblSeguridadTitulo, BorderLayout.NORTH);
-        cardSeguridad.add(lblSeguridadDesc, BorderLayout.CENTER);
-
-        cardSeguridad.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                mostrarLlamada("Seguridad UDLAP");
-            }
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gravedad = new JComboBox<>(new String[]{
+                "Rojo", "Naranja", "Amarillo", "Verde", "Azul"
         });
+        gravedad.setFont(fieldFont);
+        centro.add(gravedad, gbc);
 
-        panelCards.add(cardMedicos);
-        panelCards.add(cardSeguridad);
+        // Ubicacion
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        JLabel lblUbicacion = new JLabel("Ubicacion (edificio, salon):");
+        lblUbicacion.setFont(labelFont);
+        centro.add(lblUbicacion, gbc);
 
-        JPanel centro = new JPanel(new BorderLayout());
-        centro.setOpaque(false);
-        centro.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-        centro.add(panelCards, BorderLayout.NORTH);
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        ubicacion = new JTextField(25);
+        ubicacion.setFont(fieldFont);
+        ubicacion.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        centro.add(ubicacion, gbc);
+
+        // Descripcion
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        JLabel lblDescripcion = new JLabel("Descripcion:");
+        lblDescripcion.setFont(labelFont);
+        centro.add(lblDescripcion, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        descripcion = new JTextArea(5, 25);
+        descripcion.setFont(fieldFont);
+        descripcion.setLineWrap(true);
+        descripcion.setWrapStyleWord(true);
+        descripcion.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ColoresUDLAP.GRIS_CLARO),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        JScrollPane scrollDescripcion = new JScrollPane(descripcion);
+        centro.add(scrollDescripcion, gbc);
+
         add(centro, BorderLayout.CENTER);
+
+        // Panel de botones
+        JPanel panelBotones = new JPanel(new GridLayout(1, 2, 20, 0));
+        panelBotones.setBackground(ColoresUDLAP.BLANCO);
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(15, 60, 25, 60));
+
+        JButton btnMedicos = crearBotonEmergencia("Llamar a Servicios Medicos", ColoresUDLAP.VERDE_SOLIDO);
+        btnMedicos.addActionListener(e -> registrarEmergencia());
+
+        JButton btnSeguridad = crearBotonEmergencia("Llamar a Seguridad UDLAP", ColoresUDLAP.NARANJA_BARRA);
+        btnSeguridad.addActionListener(e -> mostrarLlamadaSeguridad());
+
+        panelBotones.add(btnMedicos);
+        panelBotones.add(btnSeguridad);
+        add(panelBotones, BorderLayout.SOUTH);
     }
 
-    private void mostrarLlamada(String destino) {
+    private JButton crearBotonEmergencia(String texto, Color color) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Arial", Font.BOLD, 16));
+        boton.setBackground(color);
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setPreferredSize(new Dimension(280, 50));
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return boton;
+    }
+
+    private void registrarEmergencia() {
+        String textoDescripcion = descripcion.getText().trim();
+        String textoUbicacion = ubicacion.getText().trim();
+
+        if (textoUbicacion.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe indicar la ubicacion de la emergencia.",
+                    "Campo requerido", JOptionPane.WARNING_MESSAGE);
+            ubicacion.requestFocus();
+            return;
+        }
+
+        if (textoDescripcion.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe describir la emergencia.",
+                    "Campo requerido", JOptionPane.WARNING_MESSAGE);
+            descripcion.requestFocus();
+            return;
+        }
+
+        int idPaciente = SesionUsuario.getPacienteActual();
+        String tipo = (String) tipoEmergencia.getSelectedItem();
+        String nivel = (String) gravedad.getSelectedItem();
+        Timestamp fechaIncidente = Timestamp.valueOf(LocalDateTime.now());
+
+        boolean exito = EmergenciaDB.guardarEmergencia(
+                idPaciente > 0 ? idPaciente : null,
+                textoUbicacion,
+                tipo,
+                nivel,
+                textoDescripcion,
+                fechaIncidente,
+                null,   // TelefonoContacto
+                null    // IDResponsable
+        );
+
+        if (exito) {
+            JOptionPane.showMessageDialog(this,
+                    "Emergencia reportada exitosamente.\nServicios Medicos ha sido notificado.",
+                    "Emergencia registrada", JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo registrar la emergencia. Intente de nuevo.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarCampos() {
+        descripcion.setText("");
+        ubicacion.setText("");
+        tipoEmergencia.setSelectedIndex(0);
+        gravedad.setSelectedIndex(0);
+    }
+
+    private void mostrarLlamadaSeguridad() {
         JOptionPane.showMessageDialog(
                 this,
-                "Llamando a " + destino + "...\n\nEspere mientras se procesa la emergencia.",
+                "Llamando a Seguridad UDLAP...\n\nEspere mientras se procesa la emergencia.",
                 "Llamada en curso",
                 JOptionPane.INFORMATION_MESSAGE);
     }
