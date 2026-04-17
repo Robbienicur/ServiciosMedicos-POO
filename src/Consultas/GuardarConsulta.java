@@ -10,10 +10,12 @@ import BaseDeDatos.ConexionSQLite;
 public class GuardarConsulta implements ActionListener {
     private final JTextField[] campos;
     private final JTextArea areaTexto;
+    private final int idMedico;
 
-    public GuardarConsulta(JTextField[] campos, JTextArea areaTexto) {
+    public GuardarConsulta(JTextField[] campos, JTextArea areaTexto, int idMedico) {
         this.campos = campos;
         this.areaTexto = areaTexto;
+        this.idMedico = idMedico;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class GuardarConsulta implements ActionListener {
             String sql = "INSERT INTO Consultas (IDPaciente, IDMedico, Sintomas, Medicamentos, Diagnostico, FechaConsulta, FechaUltimaConsulta, FechaInicioSintomas, Receta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, Integer.parseInt(idPaciente));
-            ps.setInt(2, 1); // ID del médico (ajustable)
+            ps.setInt(2, idMedico);
             ps.setString(3, sintomas);
             ps.setString(4, medicamentos);
             ps.setString(5, diagnostico);

@@ -5,13 +5,13 @@ import java.awt.*;
 import Utilidades.ui.BotonUDLAP;
 
 public class PanelControlConsultas extends JPanel {
-    public PanelControlConsultas(JTextField[] campos, JTextArea areaTexto) {
+    public PanelControlConsultas(JTextField[] campos, JTextArea areaTexto, int idMedico) {
         setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         setOpaque(false);
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         JButton botonGuardar = BotonUDLAP.primario("Guardar");
-        botonGuardar.addActionListener(new GuardarConsulta(campos, areaTexto));
+        botonGuardar.addActionListener(new GuardarConsulta(campos, areaTexto, idMedico));
         add(botonGuardar);
 
         JButton botonBuscar = BotonUDLAP.secundario("Buscar");

@@ -2,8 +2,9 @@ package Inicio;
 
 public class SesionUsuario {
     private static int idPaciente;
-    private static String nombreMedico; // nuevo
-    private static boolean esMedico = false; // nuevo
+    private static int idMedico;
+    private static String nombreMedico;
+    private static boolean esMedico = false;
 
     // --- PACIENTE ---
     public static void iniciarSesionPaciente(int id) {
@@ -20,9 +21,14 @@ public class SesionUsuario {
     }
 
     // --- MÉDICO ---
-    public static void iniciarSesionMedico(String nombre) {
+    public static void iniciarSesionMedico(int id, String nombre) {
+        idMedico = id;
         nombreMedico = nombre;
         esMedico = true;
+    }
+
+    public static int getMedicoId() {
+        return idMedico;
     }
 
     public static String getMedicoActual() {
@@ -35,6 +41,7 @@ public class SesionUsuario {
 
     public static void cerrarSesion() {
         idPaciente = 0;
+        idMedico = 0;
         nombreMedico = null;
         esMedico = false;
     }

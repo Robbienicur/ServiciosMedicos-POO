@@ -78,7 +78,7 @@ public class PanelConsultaNueva extends FormularioMedicoBase implements PanelPro
         });
 
         // Acciones de botones
-        btnGuardar.addActionListener(new GuardarConsulta(camposConsulta, receta));
+        btnGuardar.addActionListener(new GuardarConsulta(camposConsulta, receta, idMedico));
 
         btnBuscar.addActionListener(new BuscarPaciente(new JTextField[] {
                 (JTextField) campos[0], (JTextField) campos[1],
